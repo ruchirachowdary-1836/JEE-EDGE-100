@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Columns2, Layers } from "lucide-react";
+import { Columns2, Layers, FileText } from "lucide-react";
 import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { PageHeader } from "@/components/ui";
@@ -23,7 +23,7 @@ export default async function FormulasPage() {
     <div>
       <PageHeader eyebrow="Formula Intelligence Lab" title="Every formula, justified"
         subtitle="Each entry explains where the formula comes from, why it works, exactly when it applies — and when it does not."
-        actions={<><Link href="/formulas/compare" className="btn-ghost"><Columns2 size={16} /> Comparisons</Link><Link href="/revision?deck=FORMULA" className="btn-primary"><Layers size={16} /> Formula revision</Link></>} />
+        actions={<><Link href="/formulas/sheet" className="btn-ghost"><FileText size={16} /> Formula sheet</Link><Link href="/formulas/compare" className="btn-ghost"><Columns2 size={16} /> Comparisons</Link><Link href="/revision?deck=FORMULA" className="btn-primary"><Layers size={16} /> Formula revision</Link></>} />
       <FormulaBrowser
         formulas={formulas.map((f) => ({
           slug: f.slug, name: f.name, expression: f.expression, whenToUse: f.whenToUse, subject: f.chapter.subject.slug,

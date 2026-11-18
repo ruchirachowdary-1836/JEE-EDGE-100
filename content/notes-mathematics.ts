@@ -1,6 +1,11 @@
 import type { NoteSeed } from "./types";
+import { withFormulaSheet } from "./note-helpers";
+import { MATH_SHEETS, MATH_TOPIC_ORDER } from "./notes-math-sheets";
+import { MATH_ALGEBRA_NOTES } from "./notes-math-algebra";
+import { MATH_CALCULUS_NOTES } from "./notes-math-calculus";
+import { MATH_GEOMETRY_NOTES } from "./notes-math-geometry";
 
-export const MATHEMATICS_NOTES: NoteSeed[] = [
+const BASE_NOTES: NoteSeed[] = [
   {
     topic: "quadratic-equations",
     sections: [
@@ -135,3 +140,17 @@ $$\\frac{d}{dx}\\int_{g(x)}^{h(x)} f(t)dt = f(h)h' - f(g)g'$$
     ],
   },
 ];
+
+const ALL = [
+  ...BASE_NOTES.map((n) => (MATH_SHEETS[n.topic] ? withFormulaSheet(n, MATH_SHEETS[n.topic]) : n)),
+  ...MATH_ALGEBRA_NOTES,
+  ...MATH_CALCULUS_NOTES,
+  ...MATH_GEOMETRY_NOTES,
+];
+
+/** Every Mathematics topic, in syllabus order. */
+export const MATHEMATICS_NOTES: NoteSeed[] = MATH_TOPIC_ORDER.map((t) => {
+  const n = ALL.find((x) => x.topic === t);
+  if (!n) throw new Error("Missing maths note for " + t);
+  return n;
+});

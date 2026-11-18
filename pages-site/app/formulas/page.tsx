@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Columns2, Layers } from "lucide-react";
+import { Columns2, Layers, FileText } from "lucide-react";
 import { PageHeader } from "@/components/ui";
 import { FormulaBrowser } from "@/app/(app)/formulas/FormulaBrowser";
 import { FORMULAS, CHAPTERS, chapterBySlug } from "@site/lib/data";
@@ -12,7 +12,7 @@ export default function FormulasPage() {
     <div>
       <PageHeader eyebrow="Formula Intelligence Lab" title="Every formula, justified"
         subtitle="Each entry explains where the formula comes from, why it works, exactly when it applies — and when it does not."
-        actions={<><Link href="/formulas/compare" className="btn-ghost"><Columns2 size={16} /> Comparisons</Link><Link href="/revision?deck=FORMULA" className="btn-primary"><Layers size={16} /> Formula flashcards</Link></>} />
+        actions={<><Link href="/formulas/sheet" className="btn-ghost"><FileText size={16} /> Formula sheet</Link><Link href="/formulas/compare" className="btn-ghost"><Columns2 size={16} /> Comparisons</Link><Link href="/revision?deck=FORMULA" className="btn-primary"><Layers size={16} /> Formula flashcards</Link></>} />
       <FormulaBrowser
         formulas={FORMULAS.map((f) => {
           const c = chapterBySlug(f.chapter)!;

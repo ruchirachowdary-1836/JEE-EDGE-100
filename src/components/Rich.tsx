@@ -55,8 +55,14 @@ export function Rich({ text, className }: { text: string | null | undefined; cla
     <div className={cn("rich space-y-3 leading-relaxed", className)}>
       {blocks.map((block, bi) => {
         const b = block.trim();
-        if (b.startsWith("$$") && b.endsWith("$$")) {
-          return <div key={bi} className="overflow-x-auto py-1" dangerouslySetInnerHTML={{ __html: tex(b.slice(2, -2).trim(), true) }} />;
+        if (/^(\$\$[\s\S]+?\$\$\s*)+$/.test(b)) {
+          // one or more display equations (consecutive $$…$$ lines in the same block)
+          const eqs = [...b.matchAll(/\$\$([\s\S]+?)\$\$/g)].map((m) => m[1].trim());
+          return (
+            <div key={bi} className="space-y-1">
+              {eqs.map((eq, ei) => <div key={ei} className="overflow-x-auto py-1" dangerouslySetInnerHTML={{ __html: tex(eq, true) }} />)}
+            </div>
+          );
         }
         const lines = b.split("\n");
         if (lines.every((l) => /^\s*-\s+/.test(l))) {
