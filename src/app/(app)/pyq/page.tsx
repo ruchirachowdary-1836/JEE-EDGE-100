@@ -64,8 +64,8 @@ export default async function PyqPage({ searchParams }: { searchParams: Record<s
 
       {totalAll === 0 ? (
         <div className="space-y-4">
-          <Empty title="No previous-year questions have been imported yet" action={user.role === "ADMIN" ? <Link href="/admin/questions/import" className="btn-primary">Import PYQs</Link> : undefined}>
-            JEE EDGE 100 does not invent or reconstruct exam questions. The PYQ library fills up when the content team imports papers from properly licensed sources, each with its year, session, shift and source attribution. Until then, use the <Link className="link" href="/gym">Question Gym</Link> — its questions are original practice questions, clearly labelled as such.
+          <Empty title="Previous-year papers" action={user.role === "ADMIN" ? <Link href="/admin/questions/import" className="btn-primary">Import PYQs</Link> : undefined}>
+            Previous-year papers will appear here, organised by year, session and shift. Meanwhile, sharpen your skills in the <Link className="link" href="/gym">Question Gym</Link> and take the <Link className="link" href="/exams">full mock test</Link>.
           </Empty>
           <Card>
             <h2 className="h2 mb-2 flex items-center gap-2"><ShieldCheck size={18} className="text-emerald-500" /> What every PYQ will include</h2>

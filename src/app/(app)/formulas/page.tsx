@@ -18,7 +18,6 @@ export default async function FormulasPage() {
     db.chapter.findMany({ orderBy: [{ subject: { order: "asc" } }, { order: "asc" }], include: { subject: true, _count: { select: { formulas: { where: { publishStatus: "PUBLISHED" } } } } } }),
     db.bookmark.findMany({ where: { userId: user.id, itemType: "FORMULA" }, select: { itemId: true } }),
   ]);
-  const withoutFormulas = chapters.filter((c) => c._count.formulas === 0).length;
   return (
     <div>
       <PageHeader eyebrow="Formula Intelligence Lab" title="Every formula, justified"
@@ -33,7 +32,6 @@ export default async function FormulasPage() {
         chapters={chapters.filter((c) => c._count.formulas > 0).map((c) => ({ slug: c.slug, name: c.name, subject: c.subject.slug }))}
         bookmarked={bookmarks.map((b) => b.itemId)}
       />
-      <p className="muted mt-6 text-sm">{withoutFormulas} of {chapters.length} chapters do not have a verified formula collection yet; they show a content-pending notice on their chapter page.</p>
     </div>
   );
 }

@@ -57,7 +57,6 @@ export default async function GymPage() {
           );
         })}
       </div>
-      <p className="muted mt-6 text-sm">Only topics with published, verified-format question sets appear here. Other topics show “content pending” on their page until their question sets are added.</p>
     </div>
   );
 }

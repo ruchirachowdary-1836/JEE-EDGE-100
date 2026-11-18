@@ -47,7 +47,6 @@ export default async function RevisionSheet({ params }: { params: { slug: string
           </div>
         </div>
       )}
-      <p className="muted text-xs">JEE EDGE 100 · content review status: {topic.note.reviewStatus.toLowerCase().replace("_", " ")}</p>
     </div>
   );
 }

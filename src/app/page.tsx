@@ -56,10 +56,6 @@ export default async function Home() {
             </div>
           ))}
         </div>
-
-        <p className="muted mt-12 text-sm">
-          Every content item shows its review status. Topics without verified content say so plainly instead of showing filler.
-        </p>
       </section>
     </div>
   );

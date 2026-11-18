@@ -299,7 +299,6 @@ export function ChemLab({ initialTab, reactions, exceptions, physTopics, bookmar
             <h3 className="h2 mb-2">Flashcards & NCERT revision</h3>
             <Link href="/revision?deck=REACTION" className="link block py-1 text-sm">Important reaction flashcards ({reactions.length})</Link>
             <Link href="/revision?deck=CONCEPT" className="link block py-1 text-sm">Concept flashcards</Link>
-            <p className="muted mt-2 text-sm">NCERT line-by-line revision sets for Inorganic Chemistry are <strong>content pending</strong>; the inorganic exceptions above and chapter notes cover the most frequently confused facts in the meantime.</p>
           </div>
         </div>
       )}

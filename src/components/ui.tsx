@@ -70,6 +70,8 @@ export function Stat({ label, value, hint, icon }: { label: string; value: React
 
 export function ReviewBadge({ status }: { status: string }) {
   const verified = status === "VERIFIED";
+  // Students only see a badge for content an expert has verified; review workflow lives in the CMS.
+  if (!verified) return null;
   const Icon = verified ? ShieldCheck : status === "CHANGES_REQUESTED" ? ShieldAlert : Clock3;
   return (
     <span
@@ -108,8 +110,8 @@ export function Empty({ title, children, action }: { title: string; children?: R
 
 export function Pending({ what }: { what: string }) {
   return (
-    <div className="rounded-xl border border-dashed border-amber-400/50 bg-amber-500/5 px-4 py-3 text-sm text-amber-800 dark:text-amber-200">
-      <strong>Content pending:</strong> {what} has not been written and verified yet. It will appear here once the content team publishes it — nothing is auto-generated.
+    <div className="muted rounded-xl border border-[var(--border)] px-4 py-3 text-sm">
+      {what} is coming soon.
     </div>
   );
 }

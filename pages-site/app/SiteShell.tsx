@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
-import { Target, Menu, X, BookOpen, Clapperboard, Sigma, FlaskConical, Dumbbell, Repeat, Info, Trophy } from "lucide-react";
+import { Target, Menu, X, BookOpen, Clapperboard, Sigma, FlaskConical, Dumbbell, Repeat, Trophy } from "lucide-react";
 import { ThemeToggle } from "@/components/AppShell";
 import { cn } from "@/lib/utils";
 
@@ -44,12 +44,6 @@ export function SiteShell({ children }: { children: ReactNode }) {
         </div>
         {open && <nav className="grid gap-1 border-t border-[var(--border)] px-4 py-3 xl:hidden">{links(() => setOpen(false))}</nav>}
       </header>
-      <div className="no-print border-b border-amber-500/30 bg-amber-500/10">
-        <div className="mx-auto flex max-w-7xl items-start gap-2 px-4 py-2 text-xs text-amber-800 dark:text-amber-200">
-          <Info size={14} className="mt-0.5 shrink-0" />
-          <span>Static edition hosted on GitHub Pages. Practice answers are checked in your browser and progress is saved only on this device. Accounts, the exam simulator, the 60-day plan, analytics and the admin CMS need the full app (see the <a className="underline" href="https://github.com/ruchirachowdary-1836/JEE-EDGE-100#readme">README</a>). Content is awaiting expert review.</span>
-        </div>
-      </div>
       <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:py-8">{children}</main>
     </div>
   );
