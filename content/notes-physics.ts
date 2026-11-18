@@ -1,6 +1,10 @@
+import { PHY_MECHANICS_NOTES } from "./notes-phy-mechanics";
+import { PHY_ENERGY_MATTER_NOTES } from "./notes-phy-energy-matter";
+import { PHY_THERMAL_WAVES_NOTES } from "./notes-phy-thermal-waves";
+import { PHY_ELECTRICITY_NOTES } from "./notes-phy-electricity";
 import type { NoteSeed } from "./types";
 
-export const PHYSICS_NOTES: NoteSeed[] = [
+const BASE_PHYSICS: NoteSeed[] = [
   {
     topic: "projectile-motion",
     sections: [
@@ -157,3 +161,5 @@ $$T_{spring} = 2\\pi\\sqrt{m/k},\\qquad T_{pendulum} = 2\\pi\\sqrt{L/g}$$
     ],
   },
 ];
+
+export const PHYSICS_NOTES: NoteSeed[] = [...BASE_PHYSICS, ...PHY_MECHANICS_NOTES, ...PHY_ENERGY_MATTER_NOTES, ...PHY_THERMAL_WAVES_NOTES, ...PHY_ELECTRICITY_NOTES];
