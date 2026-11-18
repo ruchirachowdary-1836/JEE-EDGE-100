@@ -85,7 +85,10 @@ $$\sum_{k=0}^{n} (-1)^k \binom{n}{k}(n-k)^m$$`,
 - $(f^{-1})^{-1} = f$, $(g \circ f)^{-1} = f^{-1} \circ g^{-1}$ — when both are bijective.
 - Every function on a symmetric domain: $f(x) = \underbrace{\tfrac{f(x)+f(-x)}{2}}_{\text{even}} + \underbrace{\tfrac{f(x)-f(-x)}{2}}_{\text{odd}}$.
 - Period of $\sin(ax+b)$, $\cos(ax+b)$: $\dfrac{2\pi}{|a|}$; of $\tan(ax+b)$: $\dfrac{\pi}{|a|}$.
-- $x - 1 < [x] \le x$; $[x + n] = [x] + n$ for integer $n$.`,
+- $x - 1 < [x] \le x$; $[x + n] = [x] + n$ for integer $n$.
+- Logarithms ($a, b > 0$, $a, b \ne 1$, $x, y > 0$): $\log_a(xy) = \log_ax + \log_ay$, $\log_a\dfrac xy = \log_ax - \log_ay$, $\log_ax^n = n\log_ax$, $\log_ab = \dfrac{\log_cb}{\log_ca}$, $\log_ab\cdot\log_ba = 1$, $a^{\log_ax} = x$.
+- Modulus: $|x| < a \iff -a < x < a$; $|x| > a \iff x < -a$ or $x > a$ ($a > 0$); $|x + y| \le |x| + |y|$.
+- Domains: $\sqrt{f(x)}$ needs $f(x) \ge 0$; $\log f(x)$ needs $f(x) > 0$; $\sin^{-1}f(x)$ needs $-1 \le f(x) \le 1$.`,
     diagrams: r`Use the transformation lab to see how $y = a\,f(b(x-h)) + k$ moves and stretches a graph.`,
     graphs: r`- $y = [x]$: steps, closed dot on the left end of each step.
 - $y = \{x\}$: saw-tooth with period 1.

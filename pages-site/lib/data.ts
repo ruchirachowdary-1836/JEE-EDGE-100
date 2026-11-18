@@ -10,6 +10,9 @@ import { ANIMATIONS } from "@content/animations";
 import { PHYSICS_QUESTIONS } from "@content/questions-physics";
 import { CHEMISTRY_QUESTIONS } from "@content/questions-chemistry";
 import { MATHEMATICS_QUESTIONS } from "@content/questions-mathematics";
+import { PHYSICS_QUESTIONS_2 } from "@content/questions-physics-2";
+import { CHEMISTRY_QUESTIONS_2 } from "@content/questions-chemistry-2";
+import { MATHEMATICS_QUESTIONS_2 } from "@content/questions-mathematics-2";
 import { NAMED_REACTIONS, INORGANIC_EXCEPTIONS, CONCEPT_CARDS } from "@content/chemistry";
 import type { NoteSection, QuestionSeed } from "@content/types";
 
@@ -44,7 +47,7 @@ export { COMPARISONS, ANIMATIONS, NAMED_REACTIONS, INORGANIC_EXCEPTIONS, CONCEPT
 
 export type SiteQuestion = QuestionSeed & { id: string; chapterSlug: string; chapterName: string; topicName: string };
 const counters: Record<string, number> = {};
-export const QUESTIONS: SiteQuestion[] = [...PHYSICS_QUESTIONS, ...CHEMISTRY_QUESTIONS, ...MATHEMATICS_QUESTIONS].map((q) => {
+export const QUESTIONS: SiteQuestion[] = [...PHYSICS_QUESTIONS, ...PHYSICS_QUESTIONS_2, ...CHEMISTRY_QUESTIONS, ...CHEMISTRY_QUESTIONS_2, ...MATHEMATICS_QUESTIONS, ...MATHEMATICS_QUESTIONS_2].map((q) => {
   const key = `${q.topic}-${q.level}`;
   counters[key] = (counters[key] ?? 0) + 1;
   const t = topicBySlug(q.topic)!;

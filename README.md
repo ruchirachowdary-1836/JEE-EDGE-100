@@ -13,10 +13,13 @@ The app holds a starter content library. It is real content, not placeholder tex
 | Content | Included | Status |
 |---|---|---|
 | Syllabus: 3 subjects, 54 chapters, 114 topics with subtopics | All chapters in the NTA JEE Main syllabus | Published |
-| Master notes (all 17 sections each) | 6 topics: Projectile Motion, SHM, Bohr Model, Rate Law & Order, Quadratic Equations, Definite Integrals | Published · *awaiting expert review* |
+| Master notes (17 sections + formula sheet) | **All 114 topics** | Published · *awaiting expert review* |
+| Formula sheets | Every topic, each formula with its validity condition; combined page `/formulas/sheet`; `npm run check:content` audits 184 standard JEE formulas | Published · *awaiting expert review* |
 | Formula Lab entries (all 21 fields + derivation steps) | 15 formulas | Published · *awaiting expert review* |
 | Formula comparisons | 7 (velocity vs speed, order vs molecularity, …) | Published · *awaiting expert review* |
-| Question Gym questions (5 levels × 2 per level, full solutions, every option explained) | 60 original practice questions across those 6 topics | Published · *awaiting expert review* |
+| Question Gym questions (5 levels × 2 per level, full solutions, every option explained) | 120 original practice questions across 12 topics | Published · *awaiting expert review* |
+| Mock tests | Full Mock Test 1 (75 questions, JEE pattern) and Starter Mock 1 (30) | Published |
+| AIR 100 Playbook | Exam strategy page (`/strategy`) | Published |
 | Interactive simulations (Concept Studio) | 14 | Published · *awaiting expert review* |
 | Named reactions · inorganic exceptions · concept flashcards | 18 · 16 · 24 | Published · *awaiting expert review* |
 | Periodic table data (118 elements) + configuration exceptions | Reference data | — |
@@ -25,6 +28,8 @@ The app holds a starter content library. It is real content, not placeholder tex
 **About the starter content.** It was written while the app was being built. Have a subject expert check it before students rely on it. Every item shows an *"Awaiting expert review"* badge until an admin sets its review status to **Verified** in the CMS.
 
 **About PYQs.** The app does not invent, reconstruct or "recall" exam questions. The PYQ library, filters, year- and shift-wise papers and timed PYQ tests are all built and working. They fill up when you import papers from a **licensed or official source** through *Admin → Questions → Bulk import*. The importer refuses any PYQ that is missing its year, session, shift or source attribution.
+
+To load the last five years: download the official question papers and final answer keys NTA publishes for each session and shift (jeemain.nta.nic.in); have a subject expert enter each question, its options, the official answer and a worked solution in the JSON format shown on the import page (`source: "PYQ"` with year, session, shift, date and `sourceAttribution`); import, review and publish.
 
 **What students see where content is missing.** Topics, chapters and Gym sets without content show a *content pending* notice. Students never get filler text.
 

@@ -20,7 +20,11 @@ export const CHEM_PHYSICAL_1: NoteSeed[] = [
 - Molecular formula $= n\times$ empirical, $n = \dfrac{M}{M_{\text{emp}}}$.
 - % of element $= \dfrac{\text{mass of element in 1 mol}}{M}\times100$.
 - Vapour density $= \dfrac M2$.
-- Equivalent weight $= \dfrac{M}{n\text{-factor}}$; equivalents $= \dfrac{m}{E} = n\times n\text{-factor}$.`,
+- Equivalent weight $= \dfrac{M}{n\text{-factor}}$; equivalents $= \dfrac{m}{E} = n\times n\text{-factor}$.
+- Ideal gas: $PV = nRT$ ($R = 8.314$ J K⁻¹ mol⁻¹ $= 0.0821$ L atm K⁻¹ mol⁻¹); density $\rho = \dfrac{PM}{RT}$ — ideal behaviour assumed.
+- Dalton's law of partial pressures: $P = \sum p_i$, $p_i = x_iP$ — non-reacting gases.
+- Graham's law: $\dfrac{r_1}{r_2} = \sqrt{\dfrac{M_2}{M_1}}$ (rates of diffusion/effusion at the same $T$, $P$).
+- Gay-Lussac's law of gaseous volumes: reacting gas volumes are in simple whole-number ratios (same $T$, $P$).`,
     diagrams: r`Mole "road map": mass ⇄ moles ⇄ particles, and moles ⇄ gas volume, with conversion factors on each arrow.`,
     graphs: r`Not applicable.`,
     specialCases: r`- 1 mol of H₂O contains $N_A$ molecules but $3N_A$ atoms.

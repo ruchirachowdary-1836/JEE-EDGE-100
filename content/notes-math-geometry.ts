@@ -362,6 +362,7 @@ Allied angles: for $\frac{n\pi}{2} \pm \theta$, the function changes to its co-f
 - General solutions: $\sin\theta = 0 \Rightarrow \theta = n\pi$; $\cos\theta = 0 \Rightarrow \theta = (2n+1)\frac\pi2$; $\tan\theta = 0 \Rightarrow n\pi$.
 - $\sin\theta = \sin\alpha \Rightarrow \theta = n\pi + (-1)^n\alpha$; $\cos\theta = \cos\alpha \Rightarrow \theta = 2n\pi \pm \alpha$; $\tan\theta = \tan\alpha \Rightarrow \theta = n\pi + \alpha$ — $n \in \mathbb Z$.
 - $\sin^2\theta = \sin^2\alpha$, $\cos^2\theta = \cos^2\alpha$ or $\tan^2\theta = \tan^2\alpha$ $\Rightarrow \theta = n\pi \pm \alpha$.
+- Triangle relations (enrichment — check whether "properties of triangles" is in the current syllabus): Sine rule $\dfrac{a}{\sin A} = \dfrac{b}{\sin B} = \dfrac{c}{\sin C} = 2R$; Cosine rule $\cos A = \dfrac{b^2 + c^2 - a^2}{2bc}$; Projection formula $a = b\cos C + c\cos B$; area $\Delta = \tfrac12bc\sin A$.
 - Values: $\sin15^\circ = \dfrac{\sqrt3 - 1}{2\sqrt2}$, $\cos15^\circ = \dfrac{\sqrt3+1}{2\sqrt2}$, $\tan15^\circ = 2 - \sqrt3$, $\sin18^\circ = \dfrac{\sqrt5 - 1}{4}$, $\cos36^\circ = \dfrac{\sqrt5 + 1}{4}$.`,
     diagrams: r`The transformation lab (choose $\sin x$) shows amplitude, period and phase shifts of trigonometric graphs.`,
     graphs: r`$y = \sin x$ and $y = \cos x$ oscillate between $-1$ and $1$; $\tan x$ has vertical asymptotes at $x = (2n+1)\frac\pi2$. The number of solutions of $f(x) = g(x)$ equals the number of intersections of their graphs.`,

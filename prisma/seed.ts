@@ -13,6 +13,9 @@ import { ANIMATIONS } from "../content/animations";
 import { PHYSICS_QUESTIONS } from "../content/questions-physics";
 import { CHEMISTRY_QUESTIONS } from "../content/questions-chemistry";
 import { MATHEMATICS_QUESTIONS } from "../content/questions-mathematics";
+import { PHYSICS_QUESTIONS_2 } from "../content/questions-physics-2";
+import { CHEMISTRY_QUESTIONS_2 } from "../content/questions-chemistry-2";
+import { MATHEMATICS_QUESTIONS_2 } from "../content/questions-mathematics-2";
 import { NAMED_REACTIONS, INORGANIC_EXCEPTIONS, CONCEPT_CARDS } from "../content/chemistry";
 import type { QuestionSeed } from "../content/types";
 
@@ -112,7 +115,7 @@ async function main() {
 
   const counters: Record<string, number> = {};
   const seededIds: { id: string; subject: string; type: QuestionType }[] = [];
-  const all: QuestionSeed[] = [...PHYSICS_QUESTIONS, ...CHEMISTRY_QUESTIONS, ...MATHEMATICS_QUESTIONS];
+  const all: QuestionSeed[] = [...PHYSICS_QUESTIONS, ...PHYSICS_QUESTIONS_2, ...CHEMISTRY_QUESTIONS, ...CHEMISTRY_QUESTIONS_2, ...MATHEMATICS_QUESTIONS, ...MATHEMATICS_QUESTIONS_2];
   for (const q of all) {
     const key = `${q.topic}-${q.level}`;
     counters[key] = (counters[key] ?? 0) + 1;
@@ -188,6 +191,35 @@ async function main() {
     const num = pool.filter((q) => q.type === "NUMERICAL").slice(-section.numerical);
     for (const q of [...mcq, ...num]) {
       await db.mockExamQuestion.create({ data: { mockExamId: mockId, questionId: q.id, order: order++, section: section.subject } });
+    }
+  }
+
+  console.log("Seeding full-length mock…");
+  const fullId = "seed-full-mock-1";
+  const fullPattern = {
+    sections: ["physics", "chemistry", "mathematics"].map((subject) => ({ subject, mcq: 20, numerical: 5 })),
+    marks: { correct: 4, incorrectMcq: -1, incorrectNumerical: -1, unattempted: 0 },
+  };
+  await db.mockExam.upsert({
+    where: { id: fullId },
+    create: { id: fullId, title: "Full Mock Test 1 (JEE Main pattern, 75 questions)", kind: "FULL", durationMin: 180, pattern: fullPattern, publishStatus: "PUBLISHED",
+      description: "75 questions — 20 MCQ + 5 numerical per subject, 180 minutes, +4/−1 — assembled from the original practice bank." },
+    update: { pattern: fullPattern, durationMin: 180, publishStatus: "PUBLISHED" },
+  });
+  const fullAttempted = await db.mockAttempt.count({ where: { mockExamId: fullId } });
+  if (!fullAttempted) {
+    await db.mockExamQuestion.deleteMany({ where: { mockExamId: fullId } });
+    let o = 0;
+    for (const section of fullPattern.sections) {
+      const pool = seededIds.filter((q) => q.subject === section.subject);
+      const pick = (type: QuestionType, n: number) => {
+        const list = pool.filter((q) => q.type === type);
+        if (list.length < n) throw new Error(`Full mock needs ${n} ${type} in ${section.subject}, have ${list.length}`);
+        return Array.from({ length: n }, (_, k) => list[Math.floor((k * list.length) / n)]);
+      };
+      for (const q of [...pick("MCQ", section.mcq), ...pick("NUMERICAL", section.numerical)]) {
+        await db.mockExamQuestion.create({ data: { mockExamId: fullId, questionId: q.id, order: o++, section: section.subject } });
+      }
     }
   }
 

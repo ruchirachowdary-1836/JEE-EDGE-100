@@ -15,7 +15,8 @@
     "db:reset": "prisma migrate reset --force",
     "student:reset": "tsx scripts/reset-student.ts",
     "postinstall": "prisma generate",
-    "pages:build": "cd pages-site && next build"
+    "pages:build": "cd pages-site && next build",
+    "check:content": "tsx scripts/check-notes.ts && tsx scripts/check-questions.ts && tsx scripts/audit-formulas.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
