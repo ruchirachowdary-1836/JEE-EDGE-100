@@ -1,0 +1,625 @@
+// JEE EDGE 100 — relational schema.
+// Content tables carry two independent workflow fields:
+//   publishStatus — whether students can see it (DRAFT / PUBLISHED)
+//   reviewStatus  — whether a subject expert has verified it
+// Student-facing pages only ever query PUBLISHED rows and show the review badge.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum ReviewStatus {
+  PENDING
+  IN_REVIEW
+  CHANGES_REQUESTED
+  VERIFIED
+}
+
+enum SyllabusStatus {
+  EXAMINABLE
+  ENRICHMENT
+}
+
+enum QuestionSource {
+  PRACTICE
+  PYQ
+}
+
+enum QuestionType {
+  MCQ
+  NUMERICAL
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum AttemptContext {
+  GYM
+  PYQ
+  MOCK
+  REVISION
+}
+
+enum MockKind {
+  FULL
+  CHAPTER
+  CUSTOM
+}
+
+enum MockAttemptStatus {
+  IN_PROGRESS
+  SUBMITTED
+}
+
+enum ResponseState {
+  NOT_VISITED
+  NOT_ANSWERED
+  ANSWERED
+  MARKED
+  ANSWERED_MARKED
+}
+
+enum BookmarkType {
+  TOPIC
+  FORMULA
+  QUESTION
+  REACTION
+}
+
+enum MistakeCategory {
+  CONCEPTUAL
+  FORMULA_SELECTION
+  CALCULATION
+  INTERPRETATION
+  TIME_MANAGEMENT
+  GUESSING
+}
+
+enum PlanTaskKind {
+  STUDY
+  PRACTICE
+  PYQ
+  REVISION
+  MOCK
+  BUFFER
+}
+
+enum CardType {
+  FORMULA
+  CONCEPT
+  REACTION
+}
+
+// ───────────────────────────── Identity ─────────────────────────────
+
+model User {
+  id           String          @id @default(cuid())
+  email        String          @unique
+  name         String
+  passwordHash String
+  role         Role            @default(STUDENT)
+  createdAt    DateTime        @default(now())
+  profile      StudentProfile?
+  sessions     Session[]
+  attempts     Attempt[]
+  mockAttempts MockAttempt[]
+  bookmarks    Bookmark[]
+  highlights   Highlight[]
+  notes        PersonalNote[]
+  mistakes     MistakeEntry[]
+  progress     TopicProgress[]
+  plans        StudyPlan[]
+  reviewCards  ReviewCard[]
+  events       StudyEvent[]
+}
+
+model Session {
+  id        String   @id // SHA-256 of the cookie token; the raw token is never stored
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model StudentProfile {
+  userId              String    @id
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  examDate            DateTime?
+  dailyHours          Float     @default(6)
+  dailyQuestionTarget Int       @default(60)
+  streak              Int       @default(0)
+  longestStreak       Int       @default(0)
+  lastActiveDay       String? // YYYY-MM-DD in IST
+  completedChapterIds String[]  @default([])
+}
+
+model AppConfig {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}
+
+// ───────────────────────────── Syllabus ─────────────────────────────
+
+model Subject {
+  id        String     @id @default(cuid())
+  slug      String     @unique
+  name      String
+  order     Int
+  chapters  Chapter[]
+  questions Question[]
+  animations Animation[]
+}
+
+model Chapter {
+  id             String         @id @default(cuid())
+  subjectId      String
+  subject        Subject        @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  slug           String         @unique
+  name           String
+  unit           String? // e.g. "Physical Chemistry"
+  order          Int
+  planWeight     Int            @default(3) // 1-5 planning priority set by content team, not an exam statistic
+  syllabusStatus SyllabusStatus @default(EXAMINABLE)
+  summary        String         @default("")
+  publishStatus  PublishStatus  @default(PUBLISHED)
+  reviewStatus   ReviewStatus   @default(PENDING)
+  topics         Topic[]
+  formulas       Formula[]
+  comparisons    FormulaComparison[]
+  questions      Question[]
+  animations     Animation[]
+  conceptCards   ConceptCard[]
+  reactions      NamedReaction[]
+  exceptions     InorganicException[]
+  planTasks      PlanTask[]
+
+  @@index([subjectId, order])
+}
+
+model Topic {
+  id            String        @id @default(cuid())
+  chapterId     String
+  chapter       Chapter       @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  slug          String        @unique
+  name          String
+  order         Int
+  subtopics     String[]      @default([])
+  summary       String        @default("")
+  publishStatus PublishStatus @default(PUBLISHED)
+  reviewStatus  ReviewStatus  @default(PENDING)
+  note          Note?
+  formulas      Formula[]
+  questions     Question[]
+  animations    Animation[]
+  progress      TopicProgress[]
+  highlights    Highlight[]
+  personalNotes PersonalNote[]
+
+  @@index([chapterId, order])
+}
+
+// ───────────────────────────── Content ─────────────────────────────
+
+model Note {
+  id            String        @id @default(cuid())
+  topicId       String        @unique
+  topic         Topic         @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  sections      Json // [{ key, title, body }] — body uses the platform's markdown + $LaTeX$ dialect
+  publishStatus PublishStatus @default(DRAFT)
+  reviewStatus  ReviewStatus  @default(PENDING)
+  reviewNote    String?
+  reviewedAt    DateTime?
+  updatedAt     DateTime      @updatedAt
+}
+
+model Formula {
+  id                String                 @id @default(cuid())
+  slug              String                 @unique
+  chapterId         String
+  chapter           Chapter                @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  topicId           String?
+  topic             Topic?                 @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  name              String
+  expression        String // LaTeX
+  variables         Json // [{ symbol, meaning, unit }]
+  siUnit            String
+  dimensions        String
+  origin            String
+  interpretation    String
+  whyItWorks        String
+  whenToUse         String
+  whenNotToUse      String
+  conditions        String
+  assumptions       String
+  specialCases      String
+  relations         Json // [{ slug?, text }]
+  graph             String? // description of the graphical interpretation
+  graphKey          String? // optional animation key that visualises it
+  basicExample      Json // { problem, solution }
+  jeeExample        Json
+  trickyApplication Json
+  commonMistakes    String
+  shortcuts         String
+  limitations       String
+  publishStatus     PublishStatus          @default(DRAFT)
+  reviewStatus      ReviewStatus           @default(PENDING)
+  reviewNote        String?
+  reviewedAt        DateTime?
+  updatedAt         DateTime               @updatedAt
+  derivation        FormulaDerivationStep[]
+
+  @@index([chapterId])
+}
+
+model FormulaDerivationStep {
+  id            String  @id @default(cuid())
+  formulaId     String
+  formula       Formula @relation(fields: [formulaId], references: [id], onDelete: Cascade)
+  order         Int
+  statement     String
+  justification String
+
+  @@index([formulaId, order])
+}
+
+model FormulaComparison {
+  id            String        @id @default(cuid())
+  slug          String        @unique
+  title         String
+  chapterId     String?
+  chapter       Chapter?      @relation(fields: [chapterId], references: [id], onDelete: SetNull)
+  leftTitle     String
+  rightTitle    String
+  rows          Json // [{ aspect, left, right }]
+  summary       String
+  publishStatus PublishStatus @default(DRAFT)
+  reviewStatus  ReviewStatus  @default(PENDING)
+}
+
+model Animation {
+  id             String        @id @default(cuid())
+  key            String        @unique // maps to a registered interactive component
+  title          String
+  subjectId      String
+  subject        Subject       @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  chapterId      String?
+  chapter        Chapter?      @relation(fields: [chapterId], references: [id], onDelete: SetNull)
+  topicId        String?
+  topic          Topic?        @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  intro          String
+  steps          Json // [{ title, body }] shown in step-by-step mode
+  mathExplanation String
+  realLife       String
+  jeeApplication String
+  publishStatus  PublishStatus @default(DRAFT)
+  reviewStatus   ReviewStatus  @default(PENDING)
+}
+
+model ConceptCard {
+  id            String        @id @default(cuid())
+  chapterId     String
+  chapter       Chapter       @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  front         String
+  back          String
+  publishStatus PublishStatus @default(DRAFT)
+  reviewStatus  ReviewStatus  @default(PENDING)
+}
+
+model NamedReaction {
+  id            String        @id @default(cuid())
+  slug          String        @unique
+  name          String
+  chapterId     String?
+  chapter       Chapter?      @relation(fields: [chapterId], references: [id], onDelete: SetNull)
+  reactant      String
+  reagents      String
+  product       String
+  equation      String // LaTeX / mhchem-free plain LaTeX
+  mechanism     String
+  notes         String
+  publishStatus PublishStatus @default(DRAFT)
+  reviewStatus  ReviewStatus  @default(PENDING)
+}
+
+model InorganicException {
+  id            String        @id @default(cuid())
+  chapterId     String
+  chapter       Chapter       @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  title         String
+  statement     String
+  reason        String
+  publishStatus PublishStatus @default(DRAFT)
+  reviewStatus  ReviewStatus  @default(PENDING)
+}
+
+// ───────────────────────────── Questions ─────────────────────────────
+
+model Question {
+  id                 String           @id @default(cuid())
+  source             QuestionSource   @default(PRACTICE)
+  type               QuestionType     @default(MCQ)
+  subjectId          String
+  subject            Subject          @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  chapterId          String
+  chapter            Chapter          @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  topicId            String?
+  topic              Topic?           @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  level              Int? // Question Gym level 1-5
+  difficulty         Difficulty       @default(MEDIUM)
+  statement          String
+  numericalAnswer    Float?
+  numericalTolerance Float            @default(0.01)
+  solution           String
+  conceptTested      String
+  formulaUsed        String
+  whyFormula         String
+  altMethod          String?
+  commonMistakes     String
+  approxTimeSec      Int              @default(120)
+  // PYQ attribution — required by the importer whenever source = PYQ
+  pyqYear            Int?
+  pyqSession         String?
+  pyqShift           String?
+  pyqDate            DateTime?
+  sourceAttribution  String?
+  relatedIds         String[]         @default([])
+  publishStatus      PublishStatus    @default(DRAFT)
+  reviewStatus       ReviewStatus     @default(PENDING)
+  reviewNote         String?
+  createdAt          DateTime         @default(now())
+  options            QuestionOption[]
+  attempts           Attempt[]
+  mockItems          MockExamQuestion[]
+  mistakes           MistakeEntry[]
+
+  @@index([topicId, level])
+  @@index([chapterId])
+  @@index([source, pyqYear])
+  @@index([subjectId, source])
+}
+
+model QuestionOption {
+  id          String   @id @default(cuid())
+  questionId  String
+  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  label       String
+  text        String
+  isCorrect   Boolean  @default(false)
+  explanation String   @default("")
+  order       Int
+
+  @@index([questionId])
+}
+
+model Attempt {
+  id                String         @id @default(cuid())
+  userId            String
+  user              User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionId        String
+  question          Question       @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  context           AttemptContext
+  selectedOptionId  String?
+  numericalResponse Float?
+  isCorrect         Boolean
+  timeTakenSec      Int
+  createdAt         DateTime       @default(now())
+
+  @@index([userId, questionId])
+  @@index([userId, createdAt])
+}
+
+// ───────────────────────────── Mock exams ─────────────────────────────
+
+model MockExam {
+  id            String             @id @default(cuid())
+  title         String
+  description   String             @default("")
+  kind          MockKind           @default(FULL)
+  durationMin   Int
+  pattern       Json // { sections: [{ subject, mcq, numerical }], correct, incorrectMcq, incorrectNumerical }
+  publishStatus PublishStatus      @default(DRAFT)
+  reviewStatus  ReviewStatus       @default(PENDING)
+  ownerId       String? // set for student-generated chapter tests
+  createdAt     DateTime           @default(now())
+  items         MockExamQuestion[]
+  attempts      MockAttempt[]
+}
+
+model MockExamQuestion {
+  mockExamId String
+  mockExam   MockExam @relation(fields: [mockExamId], references: [id], onDelete: Cascade)
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  order      Int
+  section    String // subject slug
+
+  @@id([mockExamId, questionId])
+}
+
+model MockAttempt {
+  id          String            @id @default(cuid())
+  userId      String
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mockExamId  String
+  mockExam    MockExam          @relation(fields: [mockExamId], references: [id], onDelete: Cascade)
+  status      MockAttemptStatus @default(IN_PROGRESS)
+  startedAt   DateTime          @default(now())
+  endsAt      DateTime
+  submittedAt DateTime?
+  score       Int?
+  summary     Json?
+  responses   MockResponse[]
+
+  @@index([userId, startedAt])
+}
+
+model MockResponse {
+  mockAttemptId     String
+  mockAttempt       MockAttempt     @relation(fields: [mockAttemptId], references: [id], onDelete: Cascade)
+  questionId        String
+  selectedOptionId  String?
+  numericalResponse Float?
+  state             ResponseState   @default(NOT_VISITED)
+  timeSpentSec      Int             @default(0)
+  isCorrect         Boolean?
+  marks             Int?
+  mistakeCategory   MistakeCategory?
+
+  @@id([mockAttemptId, questionId])
+}
+
+// ───────────────────────────── Student study data ─────────────────────────────
+
+model Bookmark {
+  id        String       @id @default(cuid())
+  userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  itemType  BookmarkType
+  itemId    String
+  createdAt DateTime     @default(now())
+
+  @@unique([userId, itemType, itemId])
+}
+
+model Highlight {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topicId    String
+  topic      Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  sectionKey String
+  text       String
+  createdAt  DateTime @default(now())
+
+  @@index([userId, topicId])
+}
+
+model PersonalNote {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topicId   String
+  topic     Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  body      String
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, topicId])
+}
+
+model MistakeEntry {
+  id             String           @id @default(cuid())
+  userId         String
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionId     String
+  question       Question         @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  selectedAnswer String
+  correctAnswer  String
+  category       MistakeCategory?
+  observation    String           @default("")
+  occurrences    Int              @default(1)
+  resolved       Boolean          @default(false)
+  nextReviewAt   DateTime
+  reviewCount    Int              @default(0)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@unique([userId, questionId])
+  @@index([userId, resolved])
+}
+
+model TopicProgress {
+  userId           String
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topicId          String
+  topic            Topic     @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  notesCompletedAt DateTime?
+  gymLevelUnlocked Int       @default(1)
+  revisedCount     Int       @default(0)
+  lastRevisedAt    DateTime?
+  masteredAt       DateTime?
+
+  @@id([userId, topicId])
+}
+
+model StudyPlan {
+  id         String     @id @default(cuid())
+  userId     String
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  startDate  DateTime
+  examDate   DateTime
+  dailyHours Float
+  active     Boolean    @default(true)
+  createdAt  DateTime   @default(now())
+  tasks      PlanTask[]
+
+  @@index([userId, active])
+}
+
+model PlanTask {
+  id              String       @id @default(cuid())
+  planId          String
+  plan            StudyPlan    @relation(fields: [planId], references: [id], onDelete: Cascade)
+  day             Int
+  phase           Int
+  kind            PlanTaskKind
+  title           String
+  detail          String       @default("")
+  chapterId       String?
+  chapter         Chapter?     @relation(fields: [chapterId], references: [id], onDelete: SetNull)
+  minutes         Int
+  questionTarget  Int?
+  completedAt     DateTime?
+  rescheduledFrom Int?
+
+  @@index([planId, day])
+}
+
+model ReviewCard {
+  id             String    @id @default(cuid())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cardType       CardType
+  itemId         String
+  ease           Float     @default(2.5)
+  intervalDays   Int       @default(0)
+  repetitions    Int       @default(0)
+  lapses         Int       @default(0)
+  dueAt          DateTime  @default(now())
+  lastReviewedAt DateTime?
+
+  @@unique([userId, cardType, itemId])
+  @@index([userId, dueAt])
+}
+
+model StudyEvent {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  kind      String // NOTES | GYM | PYQ | MOCK | REVISION | FORMULA | STUDIO
+  label     String
+  href      String
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}

@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: jee
+          POSTGRES_PASSWORD: jee_ci
+          POSTGRES_DB: jee_edge
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U jee" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://jee:jee_ci@localhost:5432/jee_edge?schema=public
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Apply migrations
+        run: npx prisma migrate deploy
+      - name: Seed content library
+        run: npm run db:seed
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Production build
+        run: npm run build
