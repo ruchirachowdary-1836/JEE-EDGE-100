@@ -81,7 +81,7 @@ npm run dev
 
 Open http://localhost:3100.
 
-**Seeded local accounts.** Change these with the `SEED_*` environment variables before seeding anything other than a local database.
+**Seeded local accounts.** These demo passwords are used only when `NODE_ENV` is not `production`. With `NODE_ENV=production` the seed refuses the defaults: set `SEED_ADMIN_PASSWORD` / `SEED_STUDENT_PASSWORD` (12+ characters) or the accounts are skipped.
 
 | Role | Email | Password |
 |---|---|---|
@@ -103,6 +103,10 @@ You can also register a new student account from the sign-in page.
 | `npm run db:seed` | Loads or refreshes the content library. Idempotent: it never rebuilds a mock that students have attempted |
 | `npm run student:reset -- <email>` | Clears one student's activity (attempts, plan, mistakes, …) and keeps the account |
 | `npm run typecheck` | Runs the TypeScript check |
+| `npm run check:content` | KaTeX compiles in every note and question, MCQs have exactly one key, 184-item formula checklist |
+| `npm run test:unit` | Marking scheme, SRS intervals, mistake ladder, plan budgets/phases, Gym unlocks, mastery, rate limiter |
+| `npm run test:e2e` | Against a running server: auth, rate limit, CSRF/Origin, IDOR between two students, admin-only APIs, full 75-question mock scoring, mid-mock solution lock, re-seed safety, mistakes, flashcards, plan + recovery, analytics, page renders. Creates and deletes throwaway users |
+| `npm run test:crawl` | Against a running server: follows every internal link as student and admin and reports any 4xx/5xx |
 
 ## 5. What's inside
 

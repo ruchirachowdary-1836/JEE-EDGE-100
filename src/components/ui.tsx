@@ -57,7 +57,7 @@ export function ProgressRing({ value, size = 96, stroke = 9, color = "#2b8cff", 
 
 export function Stat({ label, value, hint, icon }: { label: string; value: ReactNode; hint?: ReactNode; icon?: ReactNode }) {
   return (
-    <Card className="flex items-start gap-3">
+    <Card className="flex min-w-0 items-start gap-3">
       {icon && <div className="rounded-xl bg-electric-500/10 p-2 text-electric-500">{icon}</div>}
       <div className="min-w-0">
         <div className="muted text-xs font-semibold uppercase tracking-wide">{label}</div>

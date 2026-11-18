@@ -18,6 +18,7 @@ import { CHEMISTRY_QUESTIONS_2 } from "../content/questions-chemistry-2";
 import { MATHEMATICS_QUESTIONS_2 } from "../content/questions-mathematics-2";
 import { NAMED_REACTIONS, INORGANIC_EXCEPTIONS, CONCEPT_CARDS } from "../content/chemistry";
 import type { QuestionSeed } from "../content/types";
+import { syncOptions } from "../src/lib/options";
 
 const db = new PrismaClient();
 
@@ -132,12 +133,7 @@ async function main() {
       approxTimeSec: q.time, publishStatus: "PUBLISHED" as const,
     };
     await db.question.upsert({ where: { id }, create: { id, ...data }, update: data });
-    await db.questionOption.deleteMany({ where: { questionId: id } });
-    if (q.options) {
-      await db.questionOption.createMany({
-        data: q.options.map((o, i) => ({ questionId: id, label: "ABCD"[i], text: o.text, isCorrect: !!o.correct, explanation: o.why, order: i })),
-      });
-    }
+    await syncOptions(db, id, (q.options ?? []).map((o) => ({ text: o.text, isCorrect: !!o.correct, explanation: o.why })));
     seededIds.push({ id, subject: chapterSubject[chSlug], type: q.type });
   }
   // related questions: others in the same topic
@@ -224,14 +220,21 @@ async function main() {
   }
 
   console.log("Seeding accounts…");
+  // Default demo passwords are published in the README, so they are only allowed outside production.
+  const isProd = process.env.NODE_ENV === "production";
   const adminEmail = process.env.SEED_ADMIN_EMAIL ?? "admin@jee-edge.local";
-  const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? "Admin@JeeEdge2027";
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? (isProd ? undefined : "Admin@JeeEdge2027");
   const studentEmail = process.env.SEED_STUDENT_EMAIL ?? "student@jee-edge.local";
-  const studentPassword = process.env.SEED_STUDENT_PASSWORD ?? "Student@JeeEdge2027";
+  const studentPassword = process.env.SEED_STUDENT_PASSWORD ?? (isProd ? undefined : "Student@JeeEdge2027");
   for (const [email, password, name, role] of [
     [adminEmail, adminPassword, "Content Admin", "ADMIN"],
     [studentEmail, studentPassword, "Demo Student", "STUDENT"],
   ] as const) {
+    if (!password) {
+      console.log(`  skipped ${role.toLowerCase()} account: set SEED_${role === "ADMIN" ? "ADMIN" : "STUDENT"}_PASSWORD to create it in production`);
+      continue;
+    }
+    if (isProd && password.length < 12) throw new Error(`SEED_${role}_PASSWORD must be at least 12 characters in production`);
     const existing = await db.user.findUnique({ where: { email } });
     if (!existing) {
       await db.user.create({

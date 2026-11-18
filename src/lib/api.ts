@@ -6,6 +6,7 @@ import { HttpError } from "./auth";
 export function handler<Ctx = unknown>(fn: (req: Request, ctx: Ctx) => Promise<unknown>) {
   return async (req: Request, ctx: Ctx) => {
     try {
+      assertSameOrigin(req);
       const out = await fn(req, ctx);
       return out instanceof Response ? out : NextResponse.json(out ?? { ok: true });
     } catch (err) {
@@ -19,6 +20,25 @@ export function handler<Ctx = unknown>(fn: (req: Request, ctx: Ctx) => Promise<u
       return NextResponse.json({ error: "Something went wrong on the server." }, { status: 500 });
     }
   };
+}
+
+/**
+ * CSRF defence in depth (the session cookie is already SameSite=Lax): a state-changing request that carries
+ * an Origin header must come from this site. Requests without Origin (curl, server-to-server) are allowed,
+ * since they cannot ride on a victim's browser cookies.
+ */
+export function assertSameOrigin(req: Request) {
+  if (["GET", "HEAD", "OPTIONS"].includes(req.method)) return;
+  const origin = req.headers.get("origin");
+  if (!origin) return;
+  const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host");
+  let originHost: string;
+  try {
+    originHost = new URL(origin).host;
+  } catch {
+    throw new HttpError(403, "Cross-site request blocked.");
+  }
+  if (!host || originHost !== host) throw new HttpError(403, "Cross-site request blocked.");
 }
 
 export async function body<S extends ZodTypeAny>(req: Request, schema: S): Promise<output<S>> {

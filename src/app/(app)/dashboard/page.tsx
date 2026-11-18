@@ -75,7 +75,7 @@ export default async function Dashboard() {
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <Stat label="Daily streak" value={<span className="flex items-center gap-1">{exam.profile?.streak ?? 0}<Flame size={20} className="text-orange-500" /></span>} hint={`Best: ${exam.profile?.longestStreak ?? 0} days`} />
-        <Stat label="Questions today" value={`${todayAttempts}/${target}`} hint={<ProgressBar value={Math.round((todayAttempts / Math.max(1, target)) * 100)} className="mt-1 w-28" />} icon={<Target size={18} />} />
+        <Stat label="Questions today" value={`${todayAttempts}/${target}`} hint={<ProgressBar value={Math.round((todayAttempts / Math.max(1, target)) * 100)} className="mt-1 w-full max-w-[7rem]" />} icon={<Target size={18} />} />
         <Stat label="Questions solved" value={solved} hint="all practice and tests" icon={<CheckCircle2 size={18} />} />
         <Stat label="Accuracy" value={`${accuracy}%`} hint={solved ? `${correct} correct` : "no attempts yet"} icon={<Timer size={18} />} />
       </div>

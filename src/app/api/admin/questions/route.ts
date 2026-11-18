@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { apiUser, HttpError } from "@/lib/auth";
 import { body, handler } from "@/lib/api";
 import { questionSchema } from "@/lib/admin-schemas";
+import { syncOptions } from "@/lib/options";
 
 type Q = z.infer<typeof questionSchema>;
 
@@ -24,10 +25,7 @@ async function save(q: Q) {
   const row = q.id
     ? await db.question.update({ where: { id: q.id }, data: { ...data, reviewStatus: "PENDING" } })
     : await db.question.create({ data: { ...data, publishStatus: "DRAFT" } });
-  await db.questionOption.deleteMany({ where: { questionId: row.id } });
-  if (q.type === "MCQ") {
-    await db.questionOption.createMany({ data: q.options.map((o, i) => ({ questionId: row.id, label: String.fromCharCode(65 + i), text: o.text, isCorrect: o.isCorrect, explanation: o.explanation, order: i })) });
-  }
+  await syncOptions(db, row.id, q.type === "MCQ" ? q.options : []);
   return row.id;
 }
 

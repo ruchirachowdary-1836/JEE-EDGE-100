@@ -33,3 +33,15 @@ export function schedule(card: CardState, grade: Grade, rules: SrsRules, now = n
   }
   return { ease: Math.round(ease * 100) / 100, intervalDays, repetitions, lapses, dueAt };
 }
+
+/**
+ * Mistake-notebook re-attempt schedule. `days` is the configured ladder (default 1, 3, 7, 15).
+ * A correct re-attempt climbs one rung; surviving every rung resolves the mistake. A wrong one restarts the ladder.
+ */
+export function nextMistakeReview(reviewCount: number, outcome: "correct" | "wrong", days: number[], now = new Date()) {
+  const first = days[0] ?? 1;
+  if (outcome === "wrong") return { reviewCount: 0, resolved: false, nextReviewAt: new Date(now.getTime() + first * 86400_000) };
+  const next = reviewCount + 1;
+  if (next >= days.length) return { reviewCount: next, resolved: true, nextReviewAt: null };
+  return { reviewCount: next, resolved: false, nextReviewAt: new Date(now.getTime() + days[next] * 86400_000) };
+}

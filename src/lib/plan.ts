@@ -46,6 +46,19 @@ export function generatePlan(opts: { days: number; dailyHours: number; chapters:
 
   const tasks: PlanTaskDraft[] = [];
   const add = (t: Omit<PlanTaskDraft, "detail"> & { detail?: string }) => tasks.push({ detail: "", ...t });
+  // A full mock needs an unbroken 3 hours. With a smaller daily budget, schedule the 72-minute
+  // 30-question mock instead, so no day ever exceeds the hours the student said they have.
+  const addMock = (d: number, phase: number, followMax: number, followTitle: string, followDetail: string, mockDetail = "Exam conditions: one sitting, no breaks, no notes.") => {
+    const full = budget >= 180;
+    const mockMin = full ? 180 : 72;
+    add({
+      day: d, phase, kind: "MOCK", chapterId: null, minutes: mockMin, questionTarget: full ? 75 : 30,
+      title: full ? "Full-length mock test (3 hours)" : "Timed 30-question mock (72 minutes)",
+      detail: full ? mockDetail : `${mockDetail} Your daily budget is under 3 hours, so take the full 3-hour mock on a day you can free up the time.`,
+    });
+    const follow = Math.max(0, Math.min(followMax, budget - mockMin));
+    if (follow > 0) add({ day: d, phase, kind: "REVISION", title: followTitle, detail: followDetail, chapterId: null, minutes: follow, questionTarget: null });
+  };
 
   // Study slots in phases 1–2 for pending chapters.
   const studyDays = Array.from({ length: b2 }, (_, i) => i + 1).filter((d) => !isBuffer(d));
@@ -87,8 +100,7 @@ export function generatePlan(opts: { days: number; dailyHours: number; chapters:
       const mockDay = (d - b2) % 3 === 1;
       const analysisDay = (d - b2) % 3 === 2;
       if (mockDay) {
-        add({ day: d, phase, kind: "MOCK", title: "Full-length mock test (3 hours)", detail: "Exam conditions: one sitting, no breaks, no notes.", chapterId: null, minutes: 180, questionTarget: 75 });
-        add({ day: d, phase, kind: "REVISION", title: "Light formula revision", detail: "Only after the mock — no new topics.", chapterId: null, minutes: Math.max(0, Math.min(60, budget - 180)), questionTarget: null });
+        addMock(d, phase, 60, "Light formula revision", "Only after the mock — no new topics.");
       } else if (analysisDay) {
         add({ day: d, phase, kind: "REVISION", title: "Mock analysis and mistake classification", detail: "Classify every wrong or skipped question in the result page, then add them to the mistake notebook.", chapterId: null, minutes: Math.round(budget * 0.35), questionTarget: null });
         const wc = allOrdered[practiceCursor++ % allOrdered.length];
@@ -114,14 +126,22 @@ export function generatePlan(opts: { days: number; dailyHours: number; chapters:
     }
     const mock = (d - b3) % 3 === 1 && daysLeft >= 3;
     if (mock) {
-      add({ day: d, phase, kind: "MOCK", title: "Full-length mock test (3 hours)", detail: "Same time of day as your actual exam shift.", chapterId: null, minutes: 180, questionTarget: 75 });
-      add({ day: d, phase, kind: "REVISION", title: "Mock review — classify mistakes", chapterId: null, minutes: Math.max(0, Math.min(90, budget - 180)), questionTarget: null });
+      addMock(d, phase, 90, "Mock review — classify mistakes", "", "Same time of day as your actual exam shift.");
     } else {
       const rc = allOrdered[revisionCursor++ % allOrdered.length];
       const rc2 = allOrdered[revisionCursor++ % allOrdered.length];
       add({ day: d, phase, kind: "REVISION", title: `Formula + summary revision: ${rc.name}, ${rc2.name}`, detail: "Quick-revision summaries and formula flashcards for both chapters.", chapterId: rc.id, minutes: Math.round(budget * 0.4), questionTarget: null });
       add({ day: d, phase, kind: "PYQ", title: "PYQ revision: incorrect and bookmarked", detail: "PYQ Library → filters ‘Incorrect’ and ‘Bookmarked’.", chapterId: null, minutes: Math.round(budget * 0.35), questionTarget: 20 });
       add({ day: d, phase, kind: "REVISION", title: "Mistake notebook — due reviews", chapterId: null, minutes: Math.round(budget * 0.25), questionTarget: null });
+    }
+  }
+  // Percentage splits are rounded per task, which can push a day a minute or two over budget. Trim the largest flexible task.
+  for (let d = 1; d <= days; d++) {
+    const today = tasks.filter((t) => t.day === d);
+    const over = today.reduce((s, t) => s + t.minutes, 0) - budget;
+    if (over > 0) {
+      const flex = today.filter((t) => t.kind !== "MOCK").sort((a, b) => b.minutes - a.minutes)[0];
+      if (flex) flex.minutes = Math.max(0, flex.minutes - over);
     }
   }
   return tasks;

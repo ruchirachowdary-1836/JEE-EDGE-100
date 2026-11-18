@@ -13,11 +13,11 @@ export default async function SyllabusPage() {
   return (
     <div>
       <PageHeader eyebrow="Complete syllabus" title="Syllabus & Master Notes" subtitle={<>Chapter list based on the {settings.syllabus.version}. {settings.syllabus.note}</>} />
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {subjects.map((s) => {
           const units = [...new Set(s.chapters.map((c) => c.unit ?? ""))];
           return (
-            <Card key={s.slug}>
+            <Card key={s.slug} className="min-w-0">
               <div className="mb-4 flex items-center justify-between">
                 <Link href={`/syllabus/${s.slug}`} className="h2 hover:underline">{s.name}</Link>
                 <SubjectChip slug={s.slug} />
@@ -30,7 +30,7 @@ export default async function SyllabusPage() {
                     {s.chapters.filter((c) => (c.unit ?? "") === u).map((c) => (
                       <li key={c.id}>
                         <Link href={`/chapter/${c.slug}`} className="flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-[var(--surface-2)]">
-                          <span className="truncate">{c.name}{c.syllabusStatus === "ENRICHMENT" && <span className="chip ml-2 bg-violet-500/10 text-violet-500">Enrichment</span>}</span>
+                          <span className="min-w-0 truncate">{c.name}{c.syllabusStatus === "ENRICHMENT" && <span className="chip ml-2 bg-violet-500/10 text-violet-500">Enrichment</span>}</span>
                           <span className="muted shrink-0 text-xs tabular-nums">{c.studiedPct}%</span>
                         </Link>
                       </li>

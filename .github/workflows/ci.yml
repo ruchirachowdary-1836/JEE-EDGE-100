@@ -33,5 +33,18 @@ jobs:
         run: npm run db:seed
       - name: Typecheck
         run: npm run typecheck
+      - name: Content checks (KaTeX, answer keys, formula checklist)
+        run: npm run check:content
+      - name: Unit tests
+        run: npm run test:unit
       - name: Production build
         run: npm run build
+      - name: End-to-end tests and link crawl
+        run: |
+          npm run start > server.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf http://localhost:3100/login > /dev/null && break; sleep 1; done
+          npm run test:e2e
+          npm run test:crawl
+      - name: Server log on failure
+        if: failure()
+        run: tail -100 server.log || true

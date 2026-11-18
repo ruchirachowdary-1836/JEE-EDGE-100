@@ -24,6 +24,13 @@ export const POST = handler(async (req) => {
   });
   if (!q || q.publishStatus !== "PUBLISHED") throw new HttpError(404, "Question not found.");
 
+  // Practising a question here reveals its solution, so block it while the same question sits in a live mock.
+  const liveMock = await db.mockAttempt.findFirst({
+    where: { userId: user.id, status: "IN_PROGRESS", endsAt: { gt: new Date() }, mockExam: { items: { some: { questionId: q.id } } } },
+    select: { id: true },
+  });
+  if (liveMock) throw new HttpError(409, "This question is in the mock test you are taking. Finish or submit the mock first.");
+
   // Enforce Gym level locks on the server, not just in the UI.
   if (input.context === "GYM" && q.topicId && q.level && q.level > 1) {
     const s = (await topicStats(user.id, [q.topicId])).get(q.topicId);

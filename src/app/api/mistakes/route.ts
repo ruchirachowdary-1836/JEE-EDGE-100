@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { apiUser, HttpError } from "@/lib/auth";
 import { body, handler } from "@/lib/api";
 import { getSettings } from "@/lib/config";
+import { nextMistakeReview } from "@/lib/srs";
 
 const CATEGORIES = ["CONCEPTUAL", "FORMULA_SELECTION", "CALCULATION", "INTERPRETATION", "TIME_MANAGEMENT", "GUESSING"] as const;
 
@@ -43,16 +44,15 @@ export const PATCH = handler(async (req) => {
   if (input.category !== undefined) data.category = input.category;
   if (input.observation !== undefined) data.observation = input.observation;
   if (input.resolved !== undefined) data.resolved = input.resolved;
-  if (input.review === "correct") {
-    const reviewCount = entry.reviewCount + 1;
-    data.reviewCount = reviewCount;
-    // resolved once it has survived every interval in the schedule
-    if (reviewCount >= days.length) data.resolved = true;
-    else data.nextReviewAt = new Date(Date.now() + days[reviewCount] * 86400_000);
-  } else if (input.review === "wrong") {
-    data.reviewCount = 0;
-    data.occurrences = entry.occurrences + 1;
-    data.nextReviewAt = new Date(Date.now() + (days[0] ?? 1) * 86400_000);
+  if (input.review) {
+    const n = nextMistakeReview(entry.reviewCount, input.review, days);
+    data.reviewCount = n.reviewCount;
+    if (n.resolved) data.resolved = true;
+    if (n.nextReviewAt) data.nextReviewAt = n.nextReviewAt;
+    if (input.review === "wrong") {
+      data.occurrences = entry.occurrences + 1;
+      data.resolved = false;
+    }
   }
   const updated = await db.mistakeEntry.update({ where, data });
   return { ok: true, resolved: updated.resolved, nextReviewAt: updated.nextReviewAt, category: updated.category };
