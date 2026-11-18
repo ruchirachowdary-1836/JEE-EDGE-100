@@ -237,7 +237,7 @@ function ConversionPractice() {
   );
 }
 
-export function ChemLab({ initialTab, reactions, exceptions, physTopics, bookmarked }: { initialTab: string; reactions: Reaction[]; exceptions: Exception[]; physTopics: { slug: string; name: string; chapter: string; count: number }[]; bookmarked: string[] }) {
+export function ChemLab({ initialTab, reactions, exceptions, physTopics, bookmarked, staticMode = false, hrefPrefix = "" }: { initialTab: string; reactions: Reaction[]; exceptions: Exception[]; physTopics: { slug: string; name: string; chapter: string; count: number }[]; bookmarked: string[]; /** static GitHub Pages edition: no account features */ staticMode?: boolean; hrefPrefix?: string }) {
   const [tab, setTab] = useState(TABS.some(([k]) => k === initialTab) ? initialTab : "table");
   const [z, setZ] = useState(24);
   const [q, setQ] = useState("");
@@ -263,7 +263,7 @@ export function ChemLab({ initialTab, reactions, exceptions, physTopics, bookmar
               <div key={r.slug} id={r.slug} className="card card-pad scroll-mt-6">
                 <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                   <div><div className="font-display font-semibold">{r.name}</div><div className="muted text-xs">{r.chapter}</div></div>
-                  <div className="flex items-center gap-2"><ReviewBadge status={r.reviewStatus} /><BookmarkButton itemType="REACTION" itemId={r.slug} initial={bm.has(r.slug)} small /></div>
+                  <div className="flex items-center gap-2"><ReviewBadge status={r.reviewStatus} />{!staticMode && <BookmarkButton itemType="REACTION" itemId={r.slug} initial={bm.has(r.slug)} small />}</div>
                 </div>
                 <div className="overflow-x-auto rounded-xl bg-[var(--surface-2)] px-3 py-2 text-sm"><TeX display>{r.equation}</TeX></div>
                 <div className="mt-2 grid gap-1 text-sm">
@@ -293,7 +293,7 @@ export function ChemLab({ initialTab, reactions, exceptions, physTopics, bookmar
         <div className="grid gap-4 md:grid-cols-2">
           <div className="card card-pad">
             <h3 className="h2 mb-2">Physical Chemistry numerical practice</h3>
-            {physTopics.length ? physTopics.map((t) => <Link key={t.slug} href={`/gym/${t.slug}`} className="flex justify-between rounded-lg p-2 text-sm hover:bg-[var(--surface-2)]"><span>{t.name} <span className="muted">· {t.chapter}</span></span><span>{t.count} Qs</span></Link>) : <p className="muted text-sm">No numerical sets published yet.</p>}
+            {physTopics.length ? physTopics.map((t) => <Link key={t.slug} href={`${hrefPrefix}/gym/${t.slug}`} className="flex justify-between rounded-lg p-2 text-sm hover:bg-[var(--surface-2)]"><span>{t.name} <span className="muted">· {t.chapter}</span></span><span>{t.count} Qs</span></Link>) : <p className="muted text-sm">No numerical sets published yet.</p>}
           </div>
           <div className="card card-pad">
             <h3 className="h2 mb-2">Flashcards & NCERT revision</h3>

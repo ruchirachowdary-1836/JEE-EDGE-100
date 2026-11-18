@@ -7,3 +7,7 @@ node_modules
 next-env.d.ts
 build.log
 .claude/
+pages-site/.next
+pages-site/out
+pages-site/next-env.d.ts
+pages-build.log

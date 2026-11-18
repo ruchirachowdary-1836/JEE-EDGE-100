@@ -156,7 +156,9 @@ src/lib                auth, config, progress/mastery, SRS, plan generator, scor
 
 ## 9. Deployment
 
-**GitHub Pages cannot host this app.** Pages serves static files only, and JEE EDGE 100 needs a Node server and a PostgreSQL database. On GitHub, the repo instead runs **GitHub Actions CI** (`.github/workflows/ci.yml`) on every push: it starts PostgreSQL, applies migrations, seeds the content, typechecks and builds.
+**On GitHub: the static edition.** GitHub Pages serves static files only, so it cannot run the full app's server and database. Instead, `.github/workflows/pages.yml` builds a **static edition** (`pages-site/`) on every push to `main` and publishes it to **https://ruchirachowdary-1836.github.io/JEE-EDGE-100/**. It reuses the same components and `content/` files and includes the syllabus, master notes, Concept Studio, Formula Lab, Question Gym (answers checked in the browser, progress saved in `localStorage`), Chemistry Lab and flashcards. Accounts, the exam simulator, the 60-day plan, analytics, the mistake notebook and the admin CMS exist only in the full app. Build it locally with `npm run pages:build` (output in `pages-site/out`).
+
+The repo also runs **GitHub Actions CI** (`.github/workflows/ci.yml`) on every push: it starts PostgreSQL, applies migrations, seeds the content, typechecks and builds the full app.
 
 **One-click hosting from the GitHub repo (Render).** `render.yaml` is a Render Blueprint. In Render choose *New → Blueprint*, connect this repository, and enter `SEED_ADMIN_PASSWORD` (and `SEED_STUDENT_PASSWORD`) when prompted. It creates a free web service and a free PostgreSQL database. Render's free database expires after 30 days unless upgraded.
 

@@ -1,0 +1,38 @@
+import Link from "next/link";
+import { PageHeader, Card, SubjectChip } from "@/components/ui";
+import { SUBJECTS, NOTES } from "@site/lib/data";
+
+export const metadata = { title: "Syllabus" };
+
+export default function SyllabusPage() {
+  return (
+    <div>
+      <PageHeader eyebrow="Complete syllabus" title="Syllabus & Master Notes" subtitle="Chapter list based on the NTA JEE Main 2026 syllabus (latest official PDF). Re-check against the 2027 bulletin when published. Topics marked with a dot have full notes." />
+      <div className="grid gap-6 lg:grid-cols-3">
+        {SUBJECTS.map((s) => {
+          const units = [...new Set(s.chapters.map((c) => c.unit ?? ""))];
+          return (
+            <Card key={s.slug}>
+              <div className="mb-4 flex items-center justify-between"><h2 className="h2">{s.name}</h2><SubjectChip slug={s.slug} /></div>
+              {units.map((u) => (
+                <div key={u} className="mb-3">
+                  {u && <div className="muted mb-1 text-[10px] font-bold uppercase tracking-[0.18em]">{u}</div>}
+                  <ul className="space-y-1">
+                    {s.chapters.filter((c) => (c.unit ?? "") === u).map((c) => (
+                      <li key={c.slug}>
+                        <Link href={`/chapter/${c.slug}`} className="flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-[var(--surface-2)]">
+                          <span className="truncate">{c.name}</span>
+                          {c.topics.some((t) => NOTES[t.slug]) && <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-500" title="Has full notes" />}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </Card>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
