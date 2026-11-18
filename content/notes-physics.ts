@@ -1,3 +1,6 @@
+import { withFormulaSheet } from "./note-helpers";
+import { LEGACY_SHEETS } from "./notes-legacy-sheets";
+import { PHY_MODERN_NOTES } from "./notes-phy-modern";
 import { PHY_MECHANICS_NOTES } from "./notes-phy-mechanics";
 import { PHY_ENERGY_MATTER_NOTES } from "./notes-phy-energy-matter";
 import { PHY_THERMAL_WAVES_NOTES } from "./notes-phy-thermal-waves";
@@ -162,4 +165,4 @@ $$T_{spring} = 2\\pi\\sqrt{m/k},\\qquad T_{pendulum} = 2\\pi\\sqrt{L/g}$$
   },
 ];
 
-export const PHYSICS_NOTES: NoteSeed[] = [...BASE_PHYSICS, ...PHY_MECHANICS_NOTES, ...PHY_ENERGY_MATTER_NOTES, ...PHY_THERMAL_WAVES_NOTES, ...PHY_ELECTRICITY_NOTES];
+export const PHYSICS_NOTES: NoteSeed[] = [...BASE_PHYSICS.map((n) => (LEGACY_SHEETS[n.topic] ? withFormulaSheet(n, LEGACY_SHEETS[n.topic]) : n)), ...PHY_MECHANICS_NOTES, ...PHY_ENERGY_MATTER_NOTES, ...PHY_THERMAL_WAVES_NOTES, ...PHY_ELECTRICITY_NOTES, ...PHY_MODERN_NOTES];

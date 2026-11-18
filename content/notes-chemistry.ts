@@ -1,6 +1,12 @@
+import { withFormulaSheet } from "./note-helpers";
+import { LEGACY_SHEETS } from "./notes-legacy-sheets";
+import { CHEM_PHYSICAL_1 } from "./notes-chem-physical-1";
+import { CHEM_PHYSICAL_2 } from "./notes-chem-physical-2";
+import { CHEM_INORGANIC } from "./notes-chem-inorganic";
+import { CHEM_ORGANIC } from "./notes-chem-organic";
 import type { NoteSeed } from "./types";
 
-export const CHEMISTRY_NOTES: NoteSeed[] = [
+const BASE_CHEMISTRY: NoteSeed[] = [
   {
     topic: "bohr-model-hydrogen-spectrum",
     sections: [
@@ -146,3 +152,5 @@ Putting $[A] = [A]_0/2$: $t_{1/2} = \\dfrac{\\ln 2}{k} = \\dfrac{0.693}{k}$, ind
     ],
   },
 ];
+
+export const CHEMISTRY_NOTES: NoteSeed[] = [...BASE_CHEMISTRY.map((n) => (LEGACY_SHEETS[n.topic] ? withFormulaSheet(n, LEGACY_SHEETS[n.topic]) : n)), ...CHEM_PHYSICAL_1, ...CHEM_PHYSICAL_2, ...CHEM_INORGANIC, ...CHEM_ORGANIC];

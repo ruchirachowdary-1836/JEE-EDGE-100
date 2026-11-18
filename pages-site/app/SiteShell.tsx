@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
-import { Target, Menu, X, BookOpen, Clapperboard, Sigma, FlaskConical, Dumbbell, Repeat, Info } from "lucide-react";
+import { Target, Menu, X, BookOpen, Clapperboard, Sigma, FlaskConical, Dumbbell, Repeat, Info, Trophy } from "lucide-react";
 import { ThemeToggle } from "@/components/AppShell";
 import { cn } from "@/lib/utils";
 
 const NAV = [
+  { href: "/strategy", label: "AIR 100 Playbook", icon: Trophy },
   { href: "/syllabus", label: "Syllabus & Notes", icon: BookOpen },
   { href: "/studio", label: "Concept Studio", icon: Clapperboard },
   { href: "/formulas", label: "Formula Lab", icon: Sigma },

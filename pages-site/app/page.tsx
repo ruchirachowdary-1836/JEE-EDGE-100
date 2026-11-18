@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { BookOpen, Clapperboard, Sigma, Dumbbell, FlaskConical, Repeat, ArrowRight, Github } from "lucide-react";
+import { BookOpen, Clapperboard, Sigma, Dumbbell, FlaskConical, Repeat, ArrowRight, Github, Trophy, FileText } from "lucide-react";
 import { ANIMATIONS, CHAPTERS, FORMULAS, NOTES, QUESTIONS, TOPICS } from "@site/lib/data";
 
 const FEATURES = [
+  { href: "/strategy", icon: Trophy, title: "AIR 100 Playbook", text: "Paper strategy, 3-hour time plan, accuracy rules, the mistake-analysis loop and how to use the last 60 days." },
+  { href: "/formulas/sheet", icon: FileText, title: "Complete formula sheet", text: "Every formula from all three subjects, with the condition under which it holds. Printable." },
   { href: "/syllabus", icon: BookOpen, title: "Syllabus & master notes", text: `${CHAPTERS.length} chapters, ${TOPICS.length} topics. ${Object.keys(NOTES).length} topics have full 17-part notes with live diagrams.` },
   { href: "/studio", icon: Clapperboard, title: "Concept Studio", text: `${ANIMATIONS.length} interactive simulations with play, pause, slow motion and step mode.` },
   { href: "/formulas", icon: Sigma, title: "Formula Lab", text: `${FORMULAS.length} formulas with derivation, conditions, when NOT to use them and worked examples.` },
@@ -23,6 +25,7 @@ export default function Home() {
         <p className="muted mt-4 max-w-2xl">Structured, human-written preparation material with fixed, predictable logic — no chatbots and no generated answers.</p>
         <div className="mt-6 flex flex-wrap gap-3">
           <Link href="/syllabus" className="btn-primary">Start with the syllabus <ArrowRight size={16} /></Link>
+          <Link href="/strategy" className="btn-ghost"><Trophy size={16} /> AIR 100 Playbook</Link>
           <a href="https://github.com/ruchirachowdary-1836/JEE-EDGE-100" className="btn-ghost"><Github size={16} /> Source code</a>
         </div>
       </section>

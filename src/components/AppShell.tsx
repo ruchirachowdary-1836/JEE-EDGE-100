@@ -6,7 +6,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   LayoutDashboard, CalendarRange, BarChart3, BookOpen, Clapperboard, Sigma, FlaskConical, Dumbbell,
-  Archive, Timer, NotebookPen, Repeat, Settings, ShieldCheck, LogOut, Menu, X, Sun, Moon, Target,
+  Archive, Timer, NotebookPen, Repeat, Settings, ShieldCheck, LogOut, Menu, X, Sun, Moon, Target, Trophy,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -15,6 +15,7 @@ const NAV = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/plan", label: "60-Day Plan", icon: CalendarRange },
     { href: "/analytics", label: "Analytics", icon: BarChart3 },
+    { href: "/strategy", label: "AIR 100 Playbook", icon: Trophy },
   ]},
   { group: "Learn", items: [
     { href: "/syllabus", label: "Syllabus & Notes", icon: BookOpen },
