@@ -7,16 +7,18 @@ import { Rich, Inline } from "@/components/Rich";
 import { BookmarkButton } from "@/components/BookmarkButton";
 import { api } from "@/lib/client";
 import { cn, fmtDuration, MISTAKE_LABELS } from "@/lib/utils";
+import { TYPE_LABEL, type QType } from "@/lib/advanced";
+import { MatchTable } from "@/components/MatchTable";
 
 export type CardQuestion = {
-  id: string; type: "MCQ" | "NUMERICAL"; statement: string; level: number | null; difficulty: string; approxTimeSec: number;
+  id: string; type: QType; statement: string; matchLists?: unknown; level: number | null; difficulty: string; approxTimeSec: number;
   source: string; pyqYear: number | null; pyqSession: string | null; pyqShift: string | null; sourceAttribution: string | null;
   chapter: { name: string; slug: string }; topic: { name: string; slug: string } | null;
   options: { id: string; label: string; text: string }[];
 };
 
 type Reveal = {
-  isCorrect: boolean; correctOptionId: string | null; correctAnswerText: string; numericalAnswer: number | null;
+  isCorrect: boolean; marks: number | null; markScheme: string | null; correctOptionId: string | null; correctAnswerText: string; numericalAnswer: number | null;
   solution: string; conceptTested: string; formulaUsed: string; whyFormula: string; altMethod: string | null; commonMistakes: string; approxTimeSec: number;
   options: { id: string; label: string; isCorrect: boolean; explanation: string }[];
   related: { id: string; statement: string; topicSlug: string | null }[];
@@ -28,6 +30,8 @@ export function QuestionCard({ q, index, context, bookmarked, lastResult, onAnsw
   lastResult?: boolean | null; onAnswered?: (r: { isCorrect: boolean; levelUnlocked: number | null }) => void;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
+  const [multi, setMulti] = useState<string[]>([]);
+  const optionType = q.type !== "NUMERICAL";
   const [num, setNum] = useState("");
   const [reveal, setReveal] = useState<Reveal | null>(null);
   const [busy, setBusy] = useState(false);
@@ -46,19 +50,20 @@ export function QuestionCard({ q, index, context, bookmarked, lastResult, onAnsw
 
   const submit = async () => {
     setError("");
-    if (q.type === "MCQ" && !selected) return setError("Choose an option first.");
+    if ((q.type === "MCQ" || q.type === "MATCH") && !selected) return setError("Choose an option first.");
+    if (q.type === "MULTIPLE" && !multi.length) return setError("Tick at least one option.");
     if (q.type === "NUMERICAL" && (num.trim() === "" || Number.isNaN(Number(num)))) return setError("Enter a number (decimals allowed).");
     setBusy(true);
     try {
       const r = await api<Reveal>("/api/attempts", {
-        body: { questionId: q.id, context, selectedOptionId: q.type === "MCQ" ? selected : null, numericalResponse: q.type === "NUMERICAL" ? Number(num) : null, timeTakenSec: Math.round((Date.now() - start.current) / 1000) },
+        body: { questionId: q.id, context, selectedOptionId: q.type === "MCQ" || q.type === "MATCH" ? selected : null, selectedOptionIds: q.type === "MULTIPLE" ? multi : undefined, numericalResponse: q.type === "NUMERICAL" ? Number(num) : null, timeTakenSec: Math.round((Date.now() - start.current) / 1000) },
       });
       setReveal(r);
       onAnswered?.({ isCorrect: r.isCorrect, levelUnlocked: r.levelUnlocked });
     } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
   };
 
-  const retry = () => { setReveal(null); setSelected(null); setNum(""); setElapsed(0); start.current = Date.now(); setSavedMsg(""); };
+  const retry = () => { setReveal(null); setSelected(null); setMulti([]); setNum(""); setElapsed(0); start.current = Date.now(); setSavedMsg(""); };
 
   const saveMistake = async (add = false) => {
     try {
@@ -68,10 +73,11 @@ export function QuestionCard({ q, index, context, bookmarked, lastResult, onAnsw
   };
 
   const optState = (id: string) => {
-    if (!reveal) return selected === id ? "selected" : "idle";
+    const chosen = q.type === "MULTIPLE" ? multi.includes(id) : selected === id;
+    if (!reveal) return chosen ? "selected" : "idle";
     const o = reveal.options.find((x) => x.id === id);
     if (o?.isCorrect) return "correct";
-    if (id === selected) return "wrong";
+    if (chosen) return "wrong";
     return "idle";
   };
 
@@ -81,28 +87,30 @@ export function QuestionCard({ q, index, context, bookmarked, lastResult, onAnsw
         {index !== undefined && <span className="font-bold">Q{index + 1}</span>}
         {q.level && <span className="chip bg-violet-500/10 text-violet-500">Level {q.level}</span>}
         <span className={cn("chip", q.difficulty === "EASY" ? "bg-emerald-500/10 text-emerald-600" : q.difficulty === "MEDIUM" ? "bg-amber-500/10 text-amber-600" : "bg-rose-500/10 text-rose-600")}>{q.difficulty.toLowerCase()}</span>
-        <span className="chip bg-[var(--surface-2)]">{q.type === "MCQ" ? "Single correct" : "Numerical value"}</span>
+        <span className={cn("chip", optionType && q.type !== "MCQ" ? "bg-rose-500/10 text-rose-600 dark:text-rose-300" : "bg-[var(--surface-2)]")}>{TYPE_LABEL[q.type]}</span>
         {q.source === "PYQ" && <span className="chip bg-electric-500/10 text-electric-600">JEE Main {q.pyqYear}{q.pyqSession ? ` · ${q.pyqSession}` : ""}{q.pyqShift ? ` · ${q.pyqShift}` : ""}</span>}
         {lastResult !== undefined && lastResult !== null && !reveal && <span className={cn("chip", lastResult ? "bg-emerald-500/10 text-emerald-600" : "bg-rose-500/10 text-rose-600")}>last attempt: {lastResult ? "correct" : "incorrect"}</span>}
         <span className="muted ml-auto flex items-center gap-1"><Clock size={13} /> {fmtDuration(reveal ? 0 : elapsed)} / ~{fmtDuration(q.approxTimeSec)}</span>
       </div>
 
       <Rich text={q.statement} className="text-[15px]" />
+      {q.type === "MATCH" && <MatchTable lists={q.matchLists} />}
+      {q.type === "MULTIPLE" && !reveal && <p className="muted mt-2 text-xs">One or more options may be correct. Tick every option you are sure of: a wrong tick costs marks under the JEE Advanced scheme.</p>}
 
-      {q.type === "MCQ" ? (
+      {optionType ? (
         <div className="mt-4 grid gap-2">
           {q.options.map((o) => {
             const st = optState(o.id);
             const exp = reveal?.options.find((x) => x.id === o.id)?.explanation;
             return (
-              <button key={o.id} disabled={!!reveal} onClick={() => setSelected(o.id)}
+              <button key={o.id} disabled={!!reveal} aria-pressed={q.type === "MULTIPLE" ? multi.includes(o.id) : selected === o.id} onClick={() => (q.type === "MULTIPLE" ? setMulti((m) => (m.includes(o.id) ? m.filter((x) => x !== o.id) : [...m, o.id])) : setSelected(o.id))}
                 className={cn("rounded-xl border px-4 py-3 text-left text-sm transition",
                   st === "idle" && "border-[var(--border)] hover:border-electric-400",
                   st === "selected" && "border-electric-500 bg-electric-500/10",
                   st === "correct" && "border-emerald-500 bg-emerald-500/10",
                   st === "wrong" && "border-rose-500 bg-rose-500/10")}>
                 <div className="flex items-start gap-3">
-                  <span className={cn("grid h-6 w-6 shrink-0 place-items-center rounded-full border text-xs font-bold", st === "correct" ? "border-emerald-500 text-emerald-600" : st === "wrong" ? "border-rose-500 text-rose-600" : "border-[var(--border)]")}>{o.label}</span>
+                  <span className={cn("grid h-6 w-6 shrink-0 place-items-center border text-xs font-bold", q.type === "MULTIPLE" ? "rounded-md" : "rounded-full", st === "correct" ? "border-emerald-500 text-emerald-600" : st === "wrong" ? "border-rose-500 text-rose-600" : "border-[var(--border)]")}>{o.label}</span>
                   <div className="min-w-0 flex-1">
                     <Inline text={o.text} />
                     {reveal && exp && <div className={cn("mt-1 text-xs", st === "correct" ? "text-emerald-700 dark:text-emerald-300" : "muted")}><Inline text={exp} /></div>}
@@ -132,10 +140,12 @@ export function QuestionCard({ q, index, context, bookmarked, lastResult, onAnsw
         <div className="mt-5 space-y-4 border-t border-[var(--border)] pt-4">
           <div className={cn("flex flex-wrap items-center gap-2 rounded-xl px-4 py-3 font-semibold", reveal.isCorrect ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : "bg-rose-500/10 text-rose-700 dark:text-rose-300")}>
             {reveal.isCorrect ? <CheckCircle2 size={18} /> : <XCircle size={18} />}
-            {reveal.isCorrect ? "Correct" : "Incorrect"} · Correct answer: <Inline text={reveal.correctAnswerText} />
+            {reveal.isCorrect ? "Correct" : reveal.marks !== null && reveal.marks > 0 ? "Partially correct" : "Incorrect"} · Correct answer: <Inline text={reveal.correctAnswerText} />
+            {reveal.marks !== null && <span className="chip bg-[var(--surface)]">{reveal.marks > 0 ? "+" : ""}{reveal.marks} marks</span>}
             <span className="muted ml-auto text-xs font-normal">you took {fmtDuration(elapsed)} · target ~{fmtDuration(reveal.approxTimeSec)}</span>
           </div>
 
+          {reveal.markScheme && <p className="muted text-xs">{reveal.markScheme} The actual scheme is printed on each JEE Advanced paper.</p>}
           <div className="grid gap-3 md:grid-cols-2">
             <div className="rounded-xl border border-[var(--border)] p-3"><div className="mb-1 flex items-center gap-1 text-xs font-bold uppercase text-electric-500"><Lightbulb size={13} /> Concept tested</div><Rich text={reveal.conceptTested} className="text-sm" /></div>
             <div className="rounded-xl border border-[var(--border)] p-3"><div className="mb-1 flex items-center gap-1 text-xs font-bold uppercase text-violet-500"><Sigma size={13} /> Formula used</div><Rich text={reveal.formulaUsed} className="text-sm" /><div className="muted mt-1 text-xs"><strong>Why this formula: </strong><Inline text={reveal.whyFormula} /></div></div>

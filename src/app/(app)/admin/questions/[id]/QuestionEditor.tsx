@@ -11,6 +11,8 @@ export type QForm = {
   options: { text: string; isCorrect: boolean; explanation: string }[]; numericalAnswer: string; numericalTolerance: number;
   solution: string; conceptTested: string; formulaUsed: string; whyFormula: string; altMethod: string; commonMistakes: string; approxTimeSec: number;
   pyqYear: string; pyqSession: string; pyqShift: string; pyqDate: string; sourceAttribution: string;
+  /** MATCH only: one List-I / List-II item per line */
+  matchLeft?: string; matchRight?: string;
 };
 
 export function QuestionEditor({ initial, chapters }: { initial: QForm; chapters: { slug: string; name: string; topics: { slug: string; name: string }[] }[] }) {
@@ -27,13 +29,14 @@ export function QuestionEditor({ initial, chapters }: { initial: QForm; chapters
   const save = async () => {
     setErr("");
     if (f.type === "NUMERICAL" && (f.numericalAnswer.trim() === "" || Number.isNaN(Number(f.numericalAnswer)))) return setErr("Enter a numeric answer.");
+    const lines = (t?: string) => (t ?? "").split("\n").map((x) => x.trim()).filter(Boolean);
     setBusy(true);
     try {
       const r = await api<{ id: string }>("/api/admin/questions", {
         method: "PUT",
         body: {
           ...f, topicSlug: f.topicSlug || null, level: f.source === "PRACTICE" ? f.level : f.level || null,
-          options: f.type === "MCQ" ? f.options : [], numericalAnswer: f.type === "NUMERICAL" ? Number(f.numericalAnswer) : null,
+          options: f.type !== "NUMERICAL" ? f.options : [], matchLists: f.type === "MATCH" ? { left: lines(f.matchLeft), right: lines(f.matchRight) } : null, numericalAnswer: f.type === "NUMERICAL" ? Number(f.numericalAnswer) : null,
           altMethod: f.altMethod || null, pyqYear: f.pyqYear ? Number(f.pyqYear) : null, pyqSession: f.pyqSession || null, pyqShift: f.pyqShift || null,
           pyqDate: f.pyqDate || null, sourceAttribution: f.sourceAttribution || null,
         },
@@ -48,7 +51,7 @@ export function QuestionEditor({ initial, chapters }: { initial: QForm; chapters
     <div className="space-y-4">
       <div className="card card-pad grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
         <div><label className="label">Source</label><select className="input" value={f.source} onChange={(e) => set("source", e.target.value)}><option value="PRACTICE">Practice (original)</option><option value="PYQ">PYQ (licensed)</option></select></div>
-        <div><label className="label">Type</label><select className="input" value={f.type} onChange={(e) => set("type", e.target.value)}><option value="MCQ">MCQ (single correct)</option><option value="NUMERICAL">Numerical</option></select></div>
+        <div><label className="label">Type</label><select className="input" value={f.type} onChange={(e) => set("type", e.target.value)}><option value="MCQ">MCQ (single correct)</option><option value="NUMERICAL">Numerical</option><option value="MULTIPLE">One or more correct (Advanced)</option><option value="MATCH">Matching list (Advanced)</option></select></div>
         <div className="lg:col-span-2"><label className="label">Chapter</label><select className="input" value={f.chapterSlug} onChange={(e) => setF({ ...f, chapterSlug: e.target.value, topicSlug: "" })}>{chapters.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}</select></div>
         <div className="lg:col-span-2"><label className="label">Topic</label><select className="input" value={f.topicSlug} onChange={(e) => set("topicSlug", e.target.value)}><option value="">—</option>{topics.map((t) => <option key={t.slug} value={t.slug}>{t.name}</option>)}</select></div>
         <div><label className="label">Gym level</label><select className="input" value={f.level} onChange={(e) => set("level", Number(e.target.value))}>{[1, 2, 3, 4, 5].map((l) => <option key={l} value={l}>Level {l}</option>)}</select></div>
@@ -71,12 +74,19 @@ export function QuestionEditor({ initial, chapters }: { initial: QForm; chapters
         <div className="card card-pad"><label className="label">Preview</label><Rich text={f.statement || "_(empty)_"} /></div>
       </div>
 
-      {f.type === "MCQ" ? (
+      {f.type === "MATCH" && (
+        <div className="card card-pad grid gap-3 sm:grid-cols-2">
+          <div><label className="label">List-I (P, Q, R, S — one item per line)</label><textarea className="input text-sm" rows={4} value={f.matchLeft ?? ""} onChange={(e) => set("matchLeft", e.target.value)} /></div>
+          <div><label className="label">List-II (1, 2, 3, … — one item per line)</label><textarea className="input text-sm" rows={4} value={f.matchRight ?? ""} onChange={(e) => set("matchRight", e.target.value)} /></div>
+          <p className="muted text-xs sm:col-span-2">Options below are answer codes such as “P→2, Q→3, R→1, S→4”; mark the single correct code.</p>
+        </div>
+      )}
+      {f.type !== "NUMERICAL" ? (
         <div className="card card-pad space-y-2">
-          <label className="label">Options (select the single correct one; explain every option)</label>
+          <label className="label">{f.type === "MULTIPLE" ? "Options (tick every correct option; explain every option)" : "Options (select the single correct one; explain every option)"}</label>
           {f.options.map((o, i) => (
             <div key={i} className="grid gap-2 rounded-xl border border-[var(--border)] p-2 sm:grid-cols-[auto_1fr_1fr_auto]">
-              <label className="flex items-center gap-1 text-sm font-bold"><input type="radio" name="correct" checked={o.isCorrect} onChange={() => set("options", f.options.map((x, j) => ({ ...x, isCorrect: j === i })))} className="accent-emerald-500" /> {String.fromCharCode(65 + i)}</label>
+              <label className="flex items-center gap-1 text-sm font-bold"><input type={f.type === "MULTIPLE" ? "checkbox" : "radio"} name="correct" checked={o.isCorrect} onChange={() => set("options", f.options.map((x, j) => (f.type === "MULTIPLE" ? (j === i ? { ...x, isCorrect: !x.isCorrect } : x) : { ...x, isCorrect: j === i })))} className="accent-emerald-500" /> {String.fromCharCode(65 + i)}</label>
               <input className="input" placeholder="Option text" value={o.text} onChange={(e) => set("options", f.options.map((x, j) => (j === i ? { ...x, text: e.target.value } : x)))} />
               <input className="input" placeholder={o.isCorrect ? "Why this is correct" : "Why this is wrong"} value={o.explanation} onChange={(e) => set("options", f.options.map((x, j) => (j === i ? { ...x, explanation: e.target.value } : x)))} />
               <button className="muted hover:text-rose-500" onClick={() => set("options", f.options.filter((_, j) => j !== i))} aria-label="Remove option"><Trash2 size={15} /></button>

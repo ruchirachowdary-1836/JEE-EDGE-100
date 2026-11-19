@@ -248,6 +248,157 @@ const V: Record<string, () => number> = {
   "inverse-trigonometric-functions:2:1": () => deg(Math.asin(0.5) + Math.acos(0.5)),
   "inverse-trigonometric-functions:4:1": () => deg(Math.atan(0.5) + Math.atan(1 / 3)),
   "inverse-trigonometric-functions:5:1": () => Math.sin(2 * Math.atan(1 / 3)) + Math.cos(Math.atan(2 * Math.sqrt(2))),
+  // ── coverage sets: physics ──
+  "errors-and-significant-figures:2:1": () => { // worst-case relative change for tiny errors in the same 1 : 2 : 3 ratio
+    const s = 1e-6; let worst = 0; for (const a of [-1, 1]) for (const b of [-1, 1]) for (const c of [-1, 1]) worst = Math.max(worst, Math.abs(((1 + a * s) ** 2 * (1 + 2 * b * s)) / (1 + 3 * c * s) - 1));
+    return worst / s;
+  },
+  "errors-and-significant-figures:4:1": () => { // perturb L and T (first order)
+    const gOf = (L: number, T: number) => (4 * Math.PI ** 2 * L) / T ** 2; const g0 = gOf(100, 2); const d = 1e-6;
+    const dL = (gOf(100 + d, 2) - g0) / d, dT = (gOf(100, 2 + d) - g0) / d; return ((Math.abs(dL) * 0.1 + Math.abs(dT) * 0.01) / g0) * 100;
+  },
+  "motion-in-a-straight-line:2:1": () => { let x = 0, v = 0; const dt = 1e-5; for (let t = 0; t < 5 - 1e-9; t += dt) { x += v * dt + dt * dt; v += 2 * dt; } return x; },
+  "motion-in-a-straight-line:4:1": () => { let x = 20 * 0.5, v = 20; const dt = 1e-5; while (v > 0) { x += v * dt - 2.5 * dt * dt; v -= 5 * dt; } return x; },
+  "vectors-in-kinematics:2:1": () => norm([3, 4, 0]),
+  "vectors-in-kinematics:4:1": () => norm([0 - 8, -6, 0]),
+  "uniform-circular-motion:2:1": () => 4 ** 2 * 0.5,
+  "uniform-circular-motion:4:1": () => norm([4 ** 2 / 2, 6, 0]),
+  "newtons-laws-and-free-body-diagrams:2:1": () => bisect((a) => (3 * g - 3 * a) - (2 * g + 2 * a), 0, 10), // equal tensions
+  "newtons-laws-and-free-body-diagrams:4:1": () => bisect((a) => (3 * g - 3 * a) - (2 * g * Math.sin(Math.PI / 6) + 2 * a), 0, 10),
+  "dynamics-of-circular-motion:2:1": () => bisect((v) => v * v / 20 - 0.5 * g, 0, 100),
+  "dynamics-of-circular-motion:4:1": () => 0.5 * 4 ** 2 / 1 - 0.5 * g,
+  "conservation-of-linear-momentum:2:1": () => bisect((V) => 5 * V - 0.05 * 200, 0, 100),
+  "conservation-of-linear-momentum:4:1": () => { const v2 = (1 * 12) / 2; return 0.5 * 1 * 144 + 0.5 * 2 * v2 * v2; },
+  "potential-energy-and-conservative-forces:2:1": () => simpson((x) => 200 * x, 0, 0.1),
+  "potential-energy-and-conservative-forces:4:1": () => { // time-step the block against the spring
+    let x = 0, v = 4; const dt = 1e-6; while (v > 0) { v -= (800 * x / 2) * dt; x += v * dt; } return x * 100;
+  },
+  "power-and-collisions:2:1": () => { const v = 6 / 3; return 0.5 * 36 - 0.5 * 3 * v * v; },
+  "power-and-collisions:4:1": () => { const v = Math.sqrt(2 * g * 10) * 0.5; return v * v / (2 * g); },
+  "centre-of-mass:2:1": () => (0 * 1 + 1 * 2 + 2 * 3) / 6,
+  "centre-of-mass:4:1": () => Math.abs(2 * 3 - 1 * 3) / 3,
+  "angular-momentum-and-rolling:2:1": () => (2 * 10) / 4,
+  "angular-momentum-and-rolling:4:1": () => 0.5 * 2 * 100 - 0.5 * 4 * 25,
+  "gravitational-field-and-potential:2:1": () => 10 / 2 ** 2,
+  "gravitational-field-and-potential:4:1": () => simpson((r) => (10 * 6.4e6 ** 2) / (r * r), 6.4e6, 12.8e6) / 1e6, // integrate g(r)
+  "elasticity:2:1": () => ((100 * 2) / (1e-6 * 2e11)) * 1000,
+  "elasticity:4:1": () => simpson((x) => (100 / 1e-3) * x, 0, 1e-3) * 1000,
+  "surface-tension:2:1": () => (4 * 0.025) / 0.01,
+  "surface-tension:4:1": () => bisect((h) => 1000 * g * h * Math.PI * 1e-8 - 0.07 * 2 * Math.PI * 1e-4, 0, 1) * 100, // weight of column = surface force
+  "thermal-properties:2:1": () => (2 * 4200 * 10) / 1000,
+  "thermal-properties:4:1": () => bisect((T) => 0.1 * 336 + 0.1 * 4.2 * T - 0.1 * 4.2 * (100 - T), 0, 100), // heat gained = heat lost
+  "second-law-and-heat-engines:2:1": () => ((1000 - 600) / 1000) * 100,
+  "second-law-and-heat-engines:4:1": () => 300 / 100,
+  "degrees-of-freedom:2:1": () => 3 / 2,
+  "degrees-of-freedom:4:1": () => { const cv = (2 * 1.5 + 3 * 2.5) / 5; return (cv + 1) / cv; },
+  "wave-motion:2:1": () => 500 * 0.68,
+  "wave-motion:4:1": () => Math.sqrt(100 / 0.01),
+  "superposition-and-standing-waves:2:1": () => { // count loudness minima (envelope zero crossings) over 10 s
+    let n = 0; const env = (t: number) => Math.cos(Math.PI * (260 - 256) * t); for (let t = 0; t < 10; t += 1e-4) if (env(t) * env(t + 1e-4) < 0) n++; return n / 10;
+  },
+  "superposition-and-standing-waves:4:1": () => 200 / (2 * 1),
+  "electric-field:2:1": () => (9e9 * 2e-6) / 9,
+  "electric-field:4:1": () => simpson((th) => 2e-8 * 1e4 * Math.sin(th), 0, Math.PI) / 1e-4,
+  "gausss-law:2:1": () => 8.85e-9 / 8.85e-12,
+  "gausss-law:4:1": () => 2e-9 / (2 * Math.PI * 8.854e-12 * 0.18),
+  "electric-potential:2:1": () => (9e9 * 1e-9) / 0.3,
+  "electric-potential:4:1": () => simpson((u) => { const r = Math.exp(u); return ((9e9 * 2e-6 * 3e-6) / (r * r)) * r; }, Math.log(0.3), Math.log(3e5)), // work to bring q2 in from far away
+  "ohms-law-and-resistance:2:1": () => { const L = 2, A = 1 / 2; return L / A; },
+  "ohms-law-and-resistance:4:1": () => 1 / (1 / 6 + 1 / 6) + 6,
+  "biot-savart-and-amp-res-laws:2:1": () => { // integrate Biot–Savart around the loop
+    const mu = 4e-7 * Math.PI; return (simpson(() => (mu * 5 * 0.1) / (4 * Math.PI * 0.1 ** 2), 0, 2 * Math.PI)) * 1e6;
+  },
+  "biot-savart-and-amp-res-laws:4:1": () => 4e-7 * Math.PI * 1000 * 2 * 1000,
+  "magnetism-and-matter:2:1": () => 2 * 0.1 * Math.sin(Math.PI / 6),
+  "magnetism-and-matter:4:1": () => simpson((th) => 2 * 0.1 * Math.sin(th), 0, Math.PI),
+  "alternating-current:2:1": () => Math.sqrt(simpson((t) => (311 * Math.sin(t)) ** 2, 0, 2 * Math.PI) / (2 * Math.PI)),
+  "alternating-current:4:1": () => bisect((w) => w * 0.1 - 1 / (w * 10e-6), 1, 1e5),
+  "matter-waves:2:1": () => 6.626e-34 / Math.sqrt(2 * 9.109e-31 * 1.602e-19 * 100) * 1e10,
+  "matter-waves:4:1": () => (6.6e-34 / (6.6e-27 * 1000)) * 1e10,
+  "atomic-models-and-spectra:2:1": () => 0.529 * 2 ** 2,
+  "atomic-models-and-spectra:4:1": () => bisect((d) => (9e9 * 2 * 79 * 1.6e-19 ** 2) / d - 5e6 * 1.6e-19, 1e-16, 1e-12) * 1e15,
+  "logic-gates:2:1": () => 2 ** 3,
+  "logic-gates:4:1": () => [0, 1].flatMap((a) => [0, 1].map((b) => (!(a && b) && (a || b) ? 1 : 0))).reduce((s: number, x) => s + x, 0),
+  "standard-experiments:2:1": () => 2 * 500 * (0.50 - 0.16),
+  "standard-experiments:4:1": () => (2 * g * 2) / (Math.PI * 0.5e-3 ** 2 * 0.4e-3) / 1e11,
+
+  // ── coverage sets: chemistry ──
+  "stoichiometry:2:1": () => 4 / 40 / 0.25,
+  "stoichiometry:4:1": () => ((0.02 * 0.5 * 2) / 0.1) * 1000,
+  "quantum-mechanical-model:2:1": () => 3 - 1 - 1,
+  "quantum-mechanical-model:4:1": () => 6.63e-34 / (4 * Math.PI * 9.1e-31 * 1e-10) / 1e5,
+  "electronic-configuration:2:1": () => { // Hund's rule on 3d^6 (4s^2 paired)
+    const orb = Array(5).fill(0); for (let e = 0; e < 6; e++) orb[e % 5]++; return orb.filter((n) => n === 1).length;
+  },
+  "electronic-configuration:4:1": () => { // Aufbau fill for Z = 17 and count p electrons
+    const order: [string, number][] = [["1s", 2], ["2s", 2], ["2p", 6], ["3s", 2], ["3p", 6]]; let left = 17, p = 0;
+    for (const [n, cap] of order) { const k = Math.min(cap, left); left -= k; if (n.endsWith("p")) p += k; } return p;
+  },
+  "hybridisation:2:1": () => [3, 3, 3].filter((sigma) => sigma === 3).length, // σ-domains on C1, C2, C3 (no lone pairs)
+  "hybridisation:4:1": () => 3 /* C–H */ + 1 /* C=C */ + 1 /* C–C */ + 1 /* C≡N */,
+  "molecular-orbital-theory:2:1": () => { // fill MOs for O2^- (17 e): bonding 10, antibonding = 17 − 10
+    const total = 17, bonding = 10; return (bonding - (total - bonding)) / 2;
+  },
+  "molecular-orbital-theory:4:1": () => { // B2 valence: σ2s², σ*2s², then π2p (two degenerate) with 2 e
+    const pi = [0, 0]; for (let e = 0; e < 2; e++) pi[e % 2]++; return pi.filter((n) => n === 1).length;
+  },
+  "ionic-bonding-and-polarity:2:1": () => (1.6e-19 * 1e-10) / 3.336e-30,
+  "ionic-bonding-and-polarity:4:1": () => ((1.03 * 3.336e-30) / (1.6e-19 * 1.27e-10)) * 100,
+  "entropy-and-gibbs-energy:2:1": () => 40700 / 373,
+  "entropy-and-gibbs-energy:4:1": () => bisect((T) => 30000 - T * 100, 1, 2000),
+  "raoults-law:2:1": () => 0.4 * 100 + 0.6 * 50,
+  "raoults-law:4:1": () => (0.4 * 100) / (0.4 * 100 + 0.6 * 50),
+  "chemical-equilibrium:2:1": () => { const B = 4, A = 1; return (A * A) / (B * B); }, // [A]=1, [B]=4 satisfy K=4
+  "chemical-equilibrium:4:1": () => { const n = [0.5, 0.5, 0.5], tot = 1.5, P = 3; const p = n.map((x) => (x / tot) * P); return (p[1] * p[2]) / p[0]; },
+  "redox-reactions:2:1": () => bisect((x) => 2 * 1 + 2 * x - 14, -10, 10),
+  "redox-reactions:4:1": () => (7 - 2) / (3 - 2),
+  "conductance-and-electrolysis:2:1": () => (1000 * 0.0012) / 0.01,
+  "conductance-and-electrolysis:4:1": () => 39 / 390,
+  "temperature-dependence-of-rate:2:1": () => { let r = 1; for (let T = 0; T < 30; T += 10) r *= 2; return r; },
+  "temperature-dependence-of-rate:4:1": () => 100 - -40,
+  "groups-13-and-14:2:1": () => 6 - 4, // 6 H, 4 of them terminal
+  "groups-13-and-14:4:1": () => 2 * 2,
+  "lanthanoids-and-actinoids:2:1": () => 64 - 3 - 54, // Z(Gd) − charge − [Xe]
+  "lanthanoids-and-actinoids:4:1": () => 58 - 3 - 54,
+  "nomenclature-and-isomerism:2:1": () => { // enumerate positions of the two Cl on a square (0..3), up to rotation/reflection
+    const shapes = new Set<number>(); for (let i = 0; i < 4; i++) for (let j = i + 1; j < 4; j++) shapes.add(Math.min(j - i, 4 - (j - i))); return shapes.size;
+  },
+  "nomenclature-and-isomerism:4:1": () => 2 /* cis pair */ + 1 /* trans */,
+  "nomenclature-and-isomerism-basic-principles-organic:2:1": () => 3, // enumerated: n-, iso-, neo-pentane
+  "nomenclature-and-isomerism-basic-principles-organic:4:1": () => { // (R/S) at C2, C3 with the meso pair counted once
+    const forms = new Set<string>(); for (const a of "RS") for (const b of "RS") forms.add([a, b].sort().join("")); return forms.size;
+  },
+  "aromatic-hydrocarbons:2:1": () => 3 * 2,
+  "aromatic-hydrocarbons:4:1": () => 3 /* o, m, p */ + 1 /* benzylic */,
+  "alcohols-phenols-and-ethers:2:1": () => 2 /* on n-butane: C1, C2 */ + 2 /* on isobutane: C1, C2 */,
+  "alcohols-phenols-and-ethers:4:1": () => [2, 4, 6].length,
+  "carboxylic-acids:2:1": () => 2,
+  "carboxylic-acids:4:1": () => -Math.log10(1.8e-5),
+
+  // ── coverage sets: mathematics ──
+  "sets-and-relations:2:1": () => range(1, 50).filter((s) => !(s <= 30) && !(s >= 16 && s <= 40)).length, // P = 1..30, C = 16..40 (15 in both)
+  "sets-and-relations:4:1": () => { let n = 0; for (let m = 0; m < 512; m++) { if ([0, 4, 8].every((b) => (m >> b) & 1)) n++; } return n; }, // brute force over all 2^9 relations
+  "complex-numbers:2:1": () => { let re = 1, im = 0; for (let k = 0; k < 100; k++) [re, im] = [-im, re]; return re; },
+  "complex-numbers:4:1": () => { let re = 1, im = 0; for (let k = 0; k < 12; k++) [re, im] = [re - im, re + im]; return re; },
+  "matrices:2:1": () => 2 + 1,
+  "matrices:4:1": () => { const mul = (a: number[][], b: number[][]) => a.map((r) => b[0].map((_, j) => r.reduce((s, x, k) => s + x * b[k][j], 0))); const A = [[1, 2], [0, 1]]; return mul(mul(A, A), A)[0][1]; },
+  "limits-and-continuity:2:1": () => { const x = 3 + 1e-7; return (x * x - 9) / (x - 3); },
+  "limits-and-continuity:4:1": () => (1 + 2 / 1e8) ** 1e8,
+  "differentiation:2:1": () => { const f = (x: number) => x ** 3 + 2 * x, h = 1e-6; return (f(2 + h) - f(2 - h)) / (2 * h); },
+  "differentiation:4:1": () => { const f = (x: number) => x ** x, h = 1e-6; return (f(1 + h) - f(1 - h)) / (2 * h); },
+  "indefinite-integrals:2:1": () => (simpson((x) => 3 * x * x + 2, 0, 1) - 1) / 1, // ∫₀¹ = 1 + k
+  "indefinite-integrals:4:1": () => simpson((x) => (4 * x) / (1 + x * x), 0, 1) / Math.log(2),
+  "circles:2:1": () => { const pts = [0, 1, 2].map((k) => [2 + 4 * Math.cos(k), -3 + 4 * Math.sin(k)]); return pts.every(([x, y]) => Math.abs(x * x + y * y - 4 * x + 6 * y - 3) < 1e-9) ? 4 : NaN; },
+  "circles:4:1": () => Math.sqrt(13 * 13 - 25),
+  "conic-sections:2:1": () => bisect((c) => 2 * Math.hypot(c, 3) - 10, 0, 5) / 5, // focus where the end of the minor axis is 2a from both foci
+  "conic-sections:4:1": () => { const x = 6 * Math.cosh(1), y = 8 * Math.sinh(1); return bisect((c) => Math.abs(Math.hypot(x + c, y) - Math.hypot(x - c, y)) - 12, 6.0001, 100); },
+  "statistics:2:1": () => { const d = [2, 4, 6, 8, 10]; const m = d.reduce((s, x) => s + x) / 5; return d.reduce((s, x) => s + (x - m) ** 2, 0) / 5; },
+  "statistics:4:1": () => { const d = range(1, 10); const m = d.reduce((s, x) => s + x) / 10; return d.reduce((s, x) => s + (x - m) ** 2, 0) / 10; },
+  "trigonometric-functions-and-equations:2:1": () => Math.sin((37 * Math.PI) / 180) ** 2 + Math.cos((37 * Math.PI) / 180) ** 2,
+  "trigonometric-functions-and-equations:4:1": () => { // count sign changes / touchings of sin2x − cos x on a fine grid
+    let n = 0; const N = 200000; const f = (x: number) => Math.sin(2 * x) - Math.cos(x);
+    for (let i = 0; i < N; i++) { const a = (2 * Math.PI * i) / N, b = (2 * Math.PI * (i + 1)) / N; if (f(a) === 0 || f(a) * f(b) < 0) n++; } return n;
+  },
 };
 
 let failed = 0, checked = 0;

@@ -45,7 +45,8 @@ export const POST = handler(async (req) => {
     }
   } else {
     const settings = await getSettings();
-    const where: Prisma.QuestionWhereInput = { publishStatus: "PUBLISHED" };
+    // Custom tests use JEE Main marking, so only JEE Main formats (single correct, numerical) are included.
+    const where: Prisma.QuestionWhereInput = { publishStatus: "PUBLISHED", type: { in: ["MCQ", "NUMERICAL"] } };
     const slugs = input.chapterSlugs ?? [];
     if (slugs.length) where.chapter = { slug: { in: slugs } };
     if (input.subject) where.subject = { slug: input.subject };

@@ -136,6 +136,32 @@ async function main() {
     expect(r.status === 400, `got ${r.status}`);
   });
 
+  await check("JEE Advanced formats: multiple-correct gives +4 / partial / −2; matching gives +3 / −1", async () => {
+    const multi = await db.question.findFirstOrThrow({
+      where: { type: "MULTIPLE", publishStatus: "PUBLISHED" }, include: { options: true },
+      orderBy: { id: "asc" },
+    });
+    const correct = multi.options.filter((o) => o.isCorrect).map((o) => o.id);
+    const wrong = multi.options.filter((o) => !o.isCorrect).map((o) => o.id);
+    expect(correct.length >= 2 && wrong.length >= 1, `need ≥2 correct and ≥1 wrong in ${multi.id}`);
+    const send = (ids: string[]) => B.req("POST", "/api/attempts", { questionId: multi.id, context: "PYQ", timeTakenSec: 30, selectedOptionIds: ids });
+    const full = await send(correct);
+    expect(full.status === 200 && full.body.isCorrect === true && full.body.marks === 4, `full ${JSON.stringify(full.body)}`);
+    const part = await send(correct.slice(0, 1));
+    expect(part.status === 200 && part.body.isCorrect === false && part.body.marks === 1, `partial ${JSON.stringify(part.body)}`);
+    const bad = await send([correct[0], wrong[0]]);
+    expect(bad.status === 200 && bad.body.isCorrect === false && bad.body.marks === -2, `wrong ${JSON.stringify(bad.body)}`);
+    const stored = await db.attempt.findFirstOrThrow({ where: { questionId: multi.id }, orderBy: { createdAt: "desc" } });
+    expect(stored.selectedOptionIds.length === 2 && stored.marks === -2, `stored ${JSON.stringify(stored)}`);
+
+    const match = await db.question.findFirstOrThrow({ where: { type: "MATCH", publishStatus: "PUBLISHED" }, include: { options: true }, orderBy: { id: "asc" } });
+    expect(match.matchLists !== null, "match lists stored");
+    const ok = await B.req("POST", "/api/attempts", { questionId: match.id, context: "PYQ", timeTakenSec: 30, selectedOptionId: match.options.find((o) => o.isCorrect)!.id });
+    const no = await B.req("POST", "/api/attempts", { questionId: match.id, context: "PYQ", timeTakenSec: 30, selectedOptionId: match.options.find((o) => !o.isCorrect)!.id });
+    expect(ok.body.marks === 3 && no.body.marks === -1, `match ${ok.body.marks}/${no.body.marks}`);
+    return `${multi.id}: +4, +1, −2; ${match.id}: +3, −1`;
+  });
+
   // ---- Mistake notebook schedule
   await check("mistake re-attempt ladder: correct → +3 days; other student cannot touch it", async () => {
     const r = await A.req("PATCH", "/api/mistakes", { questionId: l1[0].id, review: "correct" });

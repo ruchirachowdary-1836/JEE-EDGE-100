@@ -89,7 +89,7 @@ export default async function PyqPage({ searchParams }: { searchParams: Record<s
               </div>
             </details>
           )}
-          <PyqList questions={questions.map((q) => ({ ...q, type: q.type as "MCQ" | "NUMERICAL" }))} bookmarked={bookmarks.map((b) => b.itemId)} lastResult={lastResult} />
+          <PyqList questions={questions.map((q) => ({ ...q, type: q.type as import("@/lib/advanced").QType }))} bookmarked={bookmarks.map((b) => b.itemId)} lastResult={lastResult} />
           <div className="mt-6 flex items-center justify-between text-sm">
             <span className="muted">{total} matching · page {page} of {Math.max(1, Math.ceil(total / PAGE))}</span>
             <div className="flex gap-2">

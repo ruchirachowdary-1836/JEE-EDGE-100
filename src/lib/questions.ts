@@ -4,7 +4,7 @@ import type { Prisma } from "@prisma/client";
 /** Fields safe to send before the student answers: no correctness flags, explanations or solutions. */
 export const QUESTION_PUBLIC_SELECT = {
   id: true, type: true, statement: true, level: true, difficulty: true, approxTimeSec: true, source: true,
-  pyqYear: true, pyqSession: true, pyqShift: true, sourceAttribution: true,
+  pyqYear: true, pyqSession: true, pyqShift: true, sourceAttribution: true, matchLists: true,
   chapter: { select: { name: true, slug: true } },
   topic: { select: { name: true, slug: true } },
   subject: { select: { slug: true } },
@@ -15,6 +15,9 @@ export type PublicQuestion = Prisma.QuestionGetPayload<{ select: typeof QUESTION
 
 export type Reveal = {
   isCorrect: boolean;
+  /** JEE Advanced marks for MULTIPLE/MATCH questions (null otherwise) */
+  marks: number | null;
+  markScheme: string | null;
   correctOptionId: string | null;
   correctAnswerText: string;
   numericalAnswer: number | null;

@@ -20,7 +20,7 @@ export default async function QuestionPage({ params }: { params: { id: string } 
     <div className="mx-auto max-w-3xl">
       <PageHeader eyebrow={q.source === "PYQ" ? "Previous-year question" : "Practice question"} title={q.topic?.name ?? q.chapter.name}
         actions={<Link href={`/chapter/${q.chapter.slug}`} className="btn-ghost">{q.chapter.name}</Link>} />
-      <PyqList questions={[{ ...q, type: q.type as "MCQ" | "NUMERICAL" }]} bookmarked={bm ? [q.id] : []} lastResult={last ? { [q.id]: last.isCorrect } : {}} />
+      <PyqList questions={[{ ...q, type: q.type as import("@/lib/advanced").QType }]} bookmarked={bm ? [q.id] : []} lastResult={last ? { [q.id]: last.isCorrect } : {}} />
     </div>
   );
 }

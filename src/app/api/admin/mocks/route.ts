@@ -29,9 +29,9 @@ export const POST = handler(async (req) => {
       if (!n) continue;
       const pool = await db.question.findMany({
         where: { publishStatus: "PUBLISHED", subject: { slug: s.subject }, type, ...(input.sources !== "ANY" ? { source: input.sources } : {}), ...(input.onlyVerified ? { reviewStatus: "VERIFIED" } : {}) },
-        select: { id: true },
-      });
-      if (pool.length < n) shortages.push(`${s.subject} ${type}: need ${n}, have ${pool.length}`);
+        select: { id: true, numericalAnswer: true },
+      }).then((qs) => (type === "NUMERICAL" ? qs.filter((q) => q.numericalAnswer !== null && Number.isInteger(q.numericalAnswer)) : qs)); // JEE Main 2027: integer answers only
+      if (pool.length < n) shortages.push(`${s.subject} ${type === "NUMERICAL" ? "NUMERICAL (integer answers)" : type}: need ${n}, have ${pool.length}`);
       shuffle(pool).slice(0, n).forEach((q) => items.push({ questionId: q.id, section: s.subject }));
     }
   }

@@ -62,7 +62,7 @@ export default async function MistakesPage() {
             selectedAnswer: e.selectedAnswer, correctAnswer: e.correctAnswer, category: e.category, observation: e.observation, occurrences: e.occurrences,
             resolved: e.resolved, due: !e.resolved && e.nextReviewAt <= now, nextReviewAt: e.nextReviewAt.toISOString(), reviewCount: e.reviewCount,
             solution: e.question.solution, concept: e.question.conceptTested, mistakes: e.question.commonMistakes,
-            question: { ...e.question, type: e.question.type as "MCQ" | "NUMERICAL" },
+            question: { ...e.question, type: e.question.type as import("@/lib/advanced").QType },
           }))} />
         </>
       )}

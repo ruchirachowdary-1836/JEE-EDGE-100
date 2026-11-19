@@ -48,7 +48,11 @@ export type QuestionSeed = {
   topic: string;
   level: 1 | 2 | 3 | 4 | 5;
   difficulty: "EASY" | "MEDIUM" | "HARD";
-  type: "MCQ" | "NUMERICAL";
+  /** MCQ: exactly one correct option. MULTIPLE: one or more correct (JEE Advanced partial marking).
+   *  MATCH: List-I/List-II matching, options are answer codes with exactly one correct. NUMERICAL: value answer. */
+  type: "MCQ" | "NUMERICAL" | "MULTIPLE" | "MATCH";
+  /** MATCH only: List-I items (labelled P, Q, R, S) and List-II items (labelled 1, 2, 3, …) */
+  match?: { left: string[]; right: string[] };
   statement: string;
   options?: OptionSeed[];
   answer?: number; // numerical

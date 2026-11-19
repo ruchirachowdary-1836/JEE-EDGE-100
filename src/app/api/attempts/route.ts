@@ -6,11 +6,14 @@ import { getSettings } from "@/lib/config";
 import { isNumericalCorrect } from "@/lib/scoring";
 import { logEvent, syncMastery, topicStats } from "@/lib/progress";
 import type { Reveal } from "@/lib/questions";
+import { ADVANCED_SCHEME, matchMarks, multipleMarks } from "@/lib/advanced";
 
 const schema = z.object({
   questionId: z.string().min(1),
   context: z.enum(["GYM", "PYQ", "REVISION"]),
   selectedOptionId: z.string().nullable().optional(),
+  /** MULTIPLE questions: every option ticked */
+  selectedOptionIds: z.array(z.string()).max(10).optional(),
   numericalResponse: z.number().finite().nullable().optional(),
   timeTakenSec: z.number().int().min(0).max(36000),
 });
@@ -39,12 +42,23 @@ export const POST = handler(async (req) => {
 
   let isCorrect = false;
   let selectedText = "";
-  if (q.type === "MCQ") {
+  let marks: number | null = null;
+  if (q.type === "MULTIPLE") {
+    const ids = [...new Set(input.selectedOptionIds ?? [])];
+    if (!ids.length) throw new HttpError(400, "Tick at least one option before submitting.");
+    const picked = ids.map((id) => q.options.find((o) => o.id === id));
+    if (picked.some((o) => !o)) throw new HttpError(400, "That option does not belong to this question.");
+    const r = multipleMarks(ids, q.options.filter((o) => o.isCorrect).map((o) => o.id));
+    isCorrect = r.fullyCorrect;
+    marks = r.marks;
+    selectedText = picked.map((o) => `(${o!.label})`).join(", ");
+  } else if (q.type === "MCQ" || q.type === "MATCH") {
     if (!input.selectedOptionId) throw new HttpError(400, "Choose an option before submitting.");
     const opt = q.options.find((o) => o.id === input.selectedOptionId);
     if (!opt) throw new HttpError(400, "That option does not belong to this question.");
     isCorrect = opt.isCorrect;
     selectedText = `(${opt.label}) ${opt.text}`;
+    if (q.type === "MATCH") marks = matchMarks(opt.id, q.options.find((o) => o.isCorrect)!.id).marks;
   } else {
     if (input.numericalResponse === null || input.numericalResponse === undefined) throw new HttpError(400, "Enter a numerical answer before submitting.");
     isCorrect = q.numericalAnswer !== null && isNumericalCorrect(input.numericalResponse, q.numericalAnswer, q.numericalTolerance);
@@ -52,12 +66,15 @@ export const POST = handler(async (req) => {
   }
 
   const correct = q.options.find((o) => o.isCorrect);
-  const correctAnswerText = q.type === "MCQ" ? (correct ? `(${correct.label}) ${correct.text}` : "") : String(q.numericalAnswer);
+  const correctAnswerText = q.type === "MULTIPLE"
+    ? q.options.filter((o) => o.isCorrect).map((o) => `(${o.label})`).join(", ")
+    : q.type === "NUMERICAL" ? String(q.numericalAnswer) : correct ? `(${correct.label}) ${correct.text}` : "";
 
   await db.attempt.create({
     data: {
       userId: user.id, questionId: q.id, context: input.context, isCorrect, timeTakenSec: input.timeTakenSec,
-      selectedOptionId: input.selectedOptionId ?? null, numericalResponse: input.numericalResponse ?? null,
+      selectedOptionId: q.type === "MULTIPLE" ? null : input.selectedOptionId ?? null, selectedOptionIds: q.type === "MULTIPLE" ? input.selectedOptionIds ?? [] : [],
+      numericalResponse: input.numericalResponse ?? null, marks,
     },
   });
 
@@ -84,7 +101,7 @@ export const POST = handler(async (req) => {
   const levelUnlocked = q.topicId ? (await topicStats(user.id, [q.topicId])).get(q.topicId)?.levelUnlocked ?? 1 : null;
 
   const reveal: Reveal & { levelUnlocked: number | null } = {
-    isCorrect, correctOptionId: correct?.id ?? null, correctAnswerText, numericalAnswer: q.numericalAnswer,
+    isCorrect, marks, markScheme: q.type === "MULTIPLE" ? ADVANCED_SCHEME.multiple.note : q.type === "MATCH" ? ADVANCED_SCHEME.match.note : null, correctOptionId: correct?.id ?? null, correctAnswerText, numericalAnswer: q.numericalAnswer,
     solution: q.solution, conceptTested: q.conceptTested, formulaUsed: q.formulaUsed, whyFormula: q.whyFormula,
     altMethod: q.altMethod, commonMistakes: q.commonMistakes, approxTimeSec: q.approxTimeSec,
     options: q.options.map((o) => ({ id: o.id, label: o.label, isCorrect: o.isCorrect, explanation: o.explanation })),

@@ -26,7 +26,8 @@ export const questionSchema = z
   .object({
     id: z.string().optional(),
     source: z.enum(["PRACTICE", "PYQ"]),
-    type: z.enum(["MCQ", "NUMERICAL"]),
+    type: z.enum(["MCQ", "NUMERICAL", "MULTIPLE", "MATCH"]),
+    matchLists: z.object({ left: z.array(z.string().min(1)).min(2).max(6), right: z.array(z.string().min(1)).min(2).max(6) }).optional().nullable(),
     chapterSlug: z.string().min(1),
     topicSlug: z.string().optional().nullable(),
     level: z.number().int().min(1).max(5).optional().nullable(),
@@ -46,9 +47,13 @@ export const questionSchema = z
     sourceAttribution: z.string().max(500).optional().nullable(),
   })
   .superRefine((q, ctx) => {
-    if (q.type === "MCQ") {
-      if (q.options.length < 2) ctx.addIssue({ code: "custom", path: ["options"], message: "MCQs need at least 2 options" });
-      if (q.options.filter((o) => o.isCorrect).length !== 1) ctx.addIssue({ code: "custom", path: ["options"], message: "Exactly one option must be correct" });
+    if (q.type !== "NUMERICAL") {
+      const n = q.options.filter((o) => o.isCorrect).length;
+      if (q.options.length < 2) ctx.addIssue({ code: "custom", path: ["options"], message: "Option questions need at least 2 options" });
+      if ((q.type === "MCQ" || q.type === "MATCH") && n !== 1) ctx.addIssue({ code: "custom", path: ["options"], message: "Exactly one option must be correct" });
+      if (q.type === "MULTIPLE" && n < 1) ctx.addIssue({ code: "custom", path: ["options"], message: "At least one option must be correct" });
+      if (q.type === "MATCH" && !q.matchLists) ctx.addIssue({ code: "custom", path: ["matchLists"], message: "Matching-list questions need List-I and List-II" });
+      if (q.type !== "MCQ" && q.source === "PYQ") ctx.addIssue({ code: "custom", path: ["type"], message: "JEE Main PYQs are single-correct or numerical" });
     } else if (q.numericalAnswer === null || q.numericalAnswer === undefined) {
       ctx.addIssue({ code: "custom", path: ["numericalAnswer"], message: "Numerical questions need an answer" });
     }

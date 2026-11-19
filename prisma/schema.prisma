@@ -43,6 +43,10 @@ enum QuestionSource {
 enum QuestionType {
   MCQ
   NUMERICAL
+  /// one or more correct options, JEE Advanced partial marking
+  MULTIPLE
+  /// match List-I with List-II; a single correct answer code
+  MATCH
 }
 
 enum Difficulty {
@@ -372,6 +376,8 @@ model Question {
   statement          String
   numericalAnswer    Float?
   numericalTolerance Float            @default(0.01)
+  /// for MATCH questions: { left: string[], right: string[] }
+  matchLists         Json?
   solution           String
   conceptTested      String
   formulaUsed        String
@@ -422,8 +428,12 @@ model Attempt {
   question          Question       @relation(fields: [questionId], references: [id], onDelete: Cascade)
   context           AttemptContext
   selectedOptionId  String?
+  /// for MULTIPLE questions: every option the student ticked
+  selectedOptionIds String[]       @default([])
   numericalResponse Float?
   isCorrect         Boolean
+  /// marks under the JEE Advanced scheme for MULTIPLE/MATCH (null for other types)
+  marks             Int?
   timeTakenSec      Int
   createdAt         DateTime       @default(now())
 

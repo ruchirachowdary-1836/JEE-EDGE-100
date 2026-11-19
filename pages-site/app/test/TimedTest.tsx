@@ -40,7 +40,7 @@ function Setup({ questions, chapters, onStart }: { questions: SiteQuestion[]; ch
   const [levels, setLevels] = useState<number[]>([3, 4, 5]);
   const [count, setCount] = useState(15);
   const [mpq, setMpq] = useState(2.4);
-  const pool = questions.filter((q) => (!subject || chapters.find((c) => c.slug === q.chapterSlug)?.subject === subject) && (!picked.length || picked.includes(q.chapterSlug)) && levels.includes(q.level));
+  const pool = questions.filter((q) => (!subject || chapters.find((c) => c.slug === q.chapterSlug)?.subject === subject) && (!picked.length || picked.includes(q.chapterSlug)) && levels.includes(q.level) && (q.type === "MCQ" || q.type === "NUMERICAL"));
   const n = Math.min(count, pool.length);
   const past = load().tests.slice(-5).reverse();
   const start = () => {
@@ -79,7 +79,7 @@ function Setup({ questions, chapters, onStart }: { questions: SiteQuestion[]; ch
             ))}
           </div>
         </div>
-        <p className="muted text-xs">Marking as in JEE Main: +4 correct, −1 incorrect (both MCQ and numerical), 0 unattempted. The timer keeps running if you refresh or close the tab, and the test is submitted automatically at time-up.</p>
+        <p className="muted text-xs">Marking as in JEE Main 2027: +4 correct, −1 incorrect (both MCQ and numerical), 0 unattempted. Only JEE Main formats are used (no multiple-correct or matching questions). The timer keeps running if you refresh or close the tab, and the test is submitted automatically at time-up.</p>
         <button className="btn-primary" disabled={n < 3} onClick={start}>Start test ({n} questions, {fmtDuration(Math.round(n * mpq * 60))})</button>
         {n < 3 && <p className="text-sm text-rose-500">Choose a wider selection: at least 3 questions are needed.</p>}
       </div>

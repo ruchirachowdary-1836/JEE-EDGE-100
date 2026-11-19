@@ -1,6 +1,6 @@
 /* Idempotent seed: loads the structured content library from /content into PostgreSQL.
  * Run with `npm run db:seed`. Safe to re-run — rows are upserted by slug or deterministic id. */
-import { PrismaClient, type QuestionType, type Difficulty } from "@prisma/client";
+import { PrismaClient, Prisma, type QuestionType, type Difficulty } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { SYLLABUS } from "../content/syllabus";
 import { PHYSICS_NOTES } from "../content/notes-physics";
@@ -107,10 +107,16 @@ async function main() {
 
   console.log("Seeding practice questions…");
   const topicChapter: Record<string, string> = {};
-  for (const s of SYLLABUS) for (const c of s.chapters) for (const t of c.topics) topicChapter[t.slug ?? slugify(t.name)] = c.slug;
+  const chapterTopicSeen = new Set<string>(); // same duplicate-slug rule as topic creation above
+  for (const s of SYLLABUS) for (const c of s.chapters) for (const t of c.topics) {
+    let slug = t.slug ?? slugify(t.name);
+    if (chapterTopicSeen.has(slug)) slug = `${slug}-${c.slug}`;
+    chapterTopicSeen.add(slug);
+    topicChapter[slug] = c.slug;
+  }
 
   const counters: Record<string, number> = {};
-  const seededIds: { id: string; subject: string; type: QuestionType }[] = [];
+  const seededIds: { id: string; subject: string; type: QuestionType; answer?: number; level: number }[] = [];
   const all: QuestionSeed[] = ALL_QUESTIONS;
   for (const q of all) {
     const key = `${q.topic}-${q.level}`;
@@ -118,18 +124,21 @@ async function main() {
     const id = `seed-${q.topic}-l${q.level}-${counters[key]}`;
     const chSlug = topicChapter[q.topic];
     if (!chSlug) throw new Error(`Unknown topic in question: ${q.topic}`);
-    if (q.type === "MCQ" && (q.options?.filter((o) => o.correct).length ?? 0) !== 1) throw new Error(`${id}: MCQ must have exactly one correct option`);
+    const nCorrect = q.options?.filter((o) => o.correct).length ?? 0;
+    if ((q.type === "MCQ" || q.type === "MATCH") && nCorrect !== 1) throw new Error(`${id}: ${q.type} must have exactly one correct option`);
+    if (q.type === "MULTIPLE" && nCorrect < 1) throw new Error(`${id}: MULTIPLE needs at least one correct option`);
+    if (q.type === "MATCH" && !q.match) throw new Error(`${id}: MATCH needs its two lists`);
     if (q.type === "NUMERICAL" && typeof q.answer !== "number") throw new Error(`${id}: numerical answer missing`);
     const data = {
       source: "PRACTICE" as const, type: q.type, subjectId: subjectId[chapterSubject[chSlug]], chapterId: chapterId[chSlug],
       topicId: topicId[q.topic], level: q.level, difficulty: q.difficulty as Difficulty, statement: q.statement,
-      numericalAnswer: q.answer ?? null, numericalTolerance: q.tolerance ?? 0.01, solution: q.solution, conceptTested: q.concept,
+      numericalAnswer: q.answer ?? null, numericalTolerance: q.tolerance ?? 0.01, matchLists: q.match ?? Prisma.JsonNull, solution: q.solution, conceptTested: q.concept,
       formulaUsed: q.formula, whyFormula: q.whyFormula, altMethod: q.alt ?? null, commonMistakes: q.mistakes,
       approxTimeSec: q.time, publishStatus: "PUBLISHED" as const,
     };
     await db.question.upsert({ where: { id }, create: { id, ...data }, update: data });
     await syncOptions(db, id, (q.options ?? []).map((o) => ({ text: o.text, isCorrect: !!o.correct, explanation: o.why })));
-    seededIds.push({ id, subject: chapterSubject[chSlug], type: q.type });
+    seededIds.push({ id, subject: chapterSubject[chSlug], type: q.type, answer: q.answer, level: q.level });
   }
   // related questions: others in the same topic
   const byTopic: Record<string, string[]> = {};
@@ -179,7 +188,8 @@ async function main() {
     // spread the picks evenly across the pool so every level and topic is represented
     const mcqPool = pool.filter((q) => q.type === "MCQ");
     const mcq = Array.from({ length: Math.min(section.mcq, mcqPool.length) }, (_, k) => mcqPool[Math.floor((k * mcqPool.length) / section.mcq)]);
-    const num = pool.filter((q) => q.type === "NUMERICAL").slice(-section.numerical);
+    // JEE Main 2027 Section B answers are integers
+    const num = pool.filter((q) => q.type === "NUMERICAL" && Number.isInteger(q.answer)).slice(-section.numerical);
     for (const q of [...mcq, ...num]) {
       await db.mockExamQuestion.create({ data: { mockExamId: mockId, questionId: q.id, order: order++, section: section.subject } });
     }
@@ -204,7 +214,8 @@ async function main() {
     for (const section of fullPattern.sections) {
       const pool = seededIds.filter((q) => q.subject === section.subject);
       const pick = (type: QuestionType, n: number) => {
-        const list = pool.filter((q) => q.type === type);
+        // JEE Main 2027: Section B answers are integers, so only integer-answer numericals go into the JEE Main mock
+        const list = pool.filter((q) => q.type === type && (type !== "NUMERICAL" || Number.isInteger(q.answer)));
         if (list.length < n) throw new Error(`Full mock needs ${n} ${type} in ${section.subject}, have ${list.length}`);
         return Array.from({ length: n }, (_, k) => list[Math.floor((k * list.length) / n)]);
       };

@@ -46,11 +46,12 @@ export const DEFAULT_SETTINGS: AppSettings = {
     ],
     marks: { correct: 4, incorrectMcq: -1, incorrectNumerical: -1, unattempted: 0 },
     source:
-      "Pattern followed since JEE Main 2025 (all 75 questions compulsory). Confirm against the official JEE Main 2027 information bulletin at jeemain.nta.nic.in and edit here if NTA changes it.",
+      "Confirmed in the official JEE Main 2027 Information Bulletin (NTA, uploaded 24 Oct 2026; checked 19 Nov 2026): 75 compulsory questions, 20 MCQ + 5 numerical per subject, 300 marks, 3 hours (4 hours for PwD/PwBD candidates eligible for a scribe), +4/−1/0 in both sections. Section B answers are entered as integers, rounded off to the nearest integer.",
   },
   examDates: [
-    { label: "JEE Main 2027 — Session 1 (tentative)", date: "2027-01-20" },
-    { label: "JEE Main 2027 — Session 2 (tentative)", date: "2027-04-01" },
+    { label: "JEE Main 2027 — Session 1 (20–24 and 28 Jan 2027, official)", date: "2027-01-20" },
+    { label: "JEE Main 2027 — Session 2 (2–7 Apr 2027, official)", date: "2027-04-02" },
+    { label: "JEE Advanced 2027 (Sunday 23 May 2027, official — jeeadv.ac.in)", date: "2027-05-23" },
   ],
   syllabus: {
     version: "official NTA JEE Main 2027 syllabus (PDF uploaded 24 Oct 2026, verified 18 Nov 2026)",

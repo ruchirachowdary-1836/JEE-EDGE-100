@@ -156,3 +156,19 @@ test("rate limiter blocks after the limit and resets after the window", () => {
   assert.equal(blocked("unit-f", 4, t0).blocked, false);
   assert.equal(blocked("unit-f", 3, t0 + 1001).blocked, false);
 });
+
+test("JEE Advanced multiple-correct marking follows the published partial rule", async () => {
+  const { multipleMarks, matchMarks } = await import("../src/lib/advanced");
+  const four = ["A", "B", "C", "D"];
+  assert.equal(multipleMarks(four, four).marks, 4);
+  assert.equal(multipleMarks(["A", "B", "C"], four).marks, 3);
+  assert.equal(multipleMarks(["A", "B"], ["A", "B", "C"]).marks, 2);
+  assert.equal(multipleMarks(["A"], ["A", "B"]).marks, 1);
+  assert.equal(multipleMarks(["A", "D"], ["A", "B"]).marks, -2);
+  assert.equal(multipleMarks([], ["A"]).marks, 0);
+  assert.equal(multipleMarks(["B"], ["B"]).fullyCorrect, true);
+  assert.equal(multipleMarks(["A", "A"], ["A", "B"]).marks, 1, "duplicate ticks count once");
+  assert.equal(matchMarks("x", "x").marks, 3);
+  assert.equal(matchMarks("y", "x").marks, -1);
+  assert.equal(matchMarks(null, "x").marks, 0);
+});

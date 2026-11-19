@@ -9,6 +9,8 @@ import type { SiteQuestion } from "@site/lib/data";
 
 import { load, recordAttempt, setUnlocked as saveUnlocked } from "@site/lib/progress";
 import { GYM_LEVELS } from "@/lib/levels";
+import { ADVANCED_SCHEME, TYPE_LABEL, matchMarks, multipleMarks } from "@/lib/advanced";
+import { MatchTable } from "@/components/MatchTable";
 
 // Progress lives in the shared browser store (@site/lib/progress): every attempt with its time.
 type Store = Record<string, boolean[]>;
@@ -47,6 +49,9 @@ export function GymProgressBadge({ topic, ids }: { topic: string; ids: string[] 
 
 function QuestionCard({ q, index, onAnswer }: { q: SiteQuestion; index: number; onAnswer: (ok: boolean, sec: number) => void }) {
   const [sel, setSel] = useState<number | null>(null);
+  const [multi, setMulti] = useState<number[]>([]);
+  const [marks, setMarks] = useState<number | null>(null);
+  const optionType = q.type !== "NUMERICAL";
   const [num, setNum] = useState("");
   const [result, setResult] = useState<boolean | null>(null);
   const [err, setErr] = useState("");
@@ -60,9 +65,15 @@ function QuestionCard({ q, index, onAnswer }: { q: SiteQuestion; index: number; 
   const submit = () => {
     setErr("");
     let ok: boolean;
-    if (q.type === "MCQ") {
+    if (q.type === "MULTIPLE") {
+      if (!multi.length) return setErr("Tick at least one option.");
+      const r = multipleMarks(multi.map(String), q.options!.map((o, i) => (o.correct ? String(i) : null)).filter((x): x is string => x !== null));
+      ok = r.fullyCorrect;
+      setMarks(r.marks);
+    } else if (q.type === "MCQ" || q.type === "MATCH") {
       if (sel === null) return setErr("Choose an option first.");
       ok = !!q.options![sel].correct;
+      if (q.type === "MATCH") setMarks(matchMarks(String(sel), String(q.options!.findIndex((o) => o.correct))).marks);
     } else {
       if (num.trim() === "" || Number.isNaN(Number(num))) return setErr("Enter a number.");
       ok = Math.abs(Number(num) - (q.answer ?? NaN)) <= (q.tolerance ?? 0.01);
@@ -70,7 +81,7 @@ function QuestionCard({ q, index, onAnswer }: { q: SiteQuestion; index: number; 
     setResult(ok);
     onAnswer(ok, Math.round((Date.now() - start.current) / 1000));
   };
-  const retry = () => { setResult(null); setSel(null); setNum(""); start.current = Date.now(); setElapsed(0); };
+  const retry = () => { setResult(null); setSel(null); setMulti([]); setMarks(null); setNum(""); start.current = Date.now(); setElapsed(0); };
   const correctIdx = q.options?.findIndex((o) => o.correct) ?? -1;
   return (
     <div className="card card-pad">
@@ -78,18 +89,21 @@ function QuestionCard({ q, index, onAnswer }: { q: SiteQuestion; index: number; 
         <span className="font-bold">Q{index + 1}</span>
         <span className="chip bg-violet-500/10 text-violet-500" title={GYM_LEVELS[q.level - 1]?.description}>Level {q.level} · {GYM_LEVELS[q.level - 1]?.name}</span>
         <span className={cn("chip", q.difficulty === "EASY" ? "bg-emerald-500/10 text-emerald-600" : q.difficulty === "MEDIUM" ? "bg-amber-500/10 text-amber-600" : "bg-rose-500/10 text-rose-600")}>{q.difficulty.toLowerCase()}</span>
-        <span className="chip bg-[var(--surface-2)]">{q.type === "MCQ" ? "Single correct" : "Numerical value"}</span>
+        <span className={cn("chip", q.type === "MULTIPLE" || q.type === "MATCH" ? "bg-rose-500/10 text-rose-600 dark:text-rose-300" : "bg-[var(--surface-2)]")}>{TYPE_LABEL[q.type]}</span>
         <span className="muted ml-auto flex items-center gap-1"><Clock size={13} /> {fmtDuration(elapsed)} / ~{fmtDuration(q.time)}</span>
       </div>
       <Rich text={q.statement} className="text-[15px]" />
-      {q.type === "MCQ" ? (
+      {q.type === "MATCH" && <MatchTable lists={q.match} />}
+      {q.type === "MULTIPLE" && result === null && <p className="muted mt-2 text-xs">One or more options may be correct. Tick every option you are sure of: a wrong tick costs marks under the JEE Advanced scheme.</p>}
+      {optionType ? (
         <div className="mt-4 grid gap-2">
           {q.options!.map((o, i) => {
-            const st = result === null ? (sel === i ? "sel" : "idle") : i === correctIdx ? "ok" : i === sel ? "bad" : "idle";
+            const chosen = q.type === "MULTIPLE" ? multi.includes(i) : sel === i;
+            const st = result === null ? (chosen ? "sel" : "idle") : o.correct ? "ok" : chosen ? "bad" : "idle";
             return (
-              <button key={i} disabled={result !== null} onClick={() => setSel(i)} className={cn("rounded-xl border px-4 py-3 text-left text-sm transition", st === "idle" && "border-[var(--border)] hover:border-electric-400", st === "sel" && "border-electric-500 bg-electric-500/10", st === "ok" && "border-emerald-500 bg-emerald-500/10", st === "bad" && "border-rose-500 bg-rose-500/10")}>
+              <button key={i} disabled={result !== null} aria-pressed={chosen} onClick={() => (q.type === "MULTIPLE" ? setMulti((m) => (m.includes(i) ? m.filter((x) => x !== i) : [...m, i])) : setSel(i))} className={cn("rounded-xl border px-4 py-3 text-left text-sm transition", st === "idle" && "border-[var(--border)] hover:border-electric-400", st === "sel" && "border-electric-500 bg-electric-500/10", st === "ok" && "border-emerald-500 bg-emerald-500/10", st === "bad" && "border-rose-500 bg-rose-500/10")}>
                 <div className="flex items-start gap-3">
-                  <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full border border-[var(--border)] text-xs font-bold">{"ABCD"[i]}</span>
+                  <span className={cn("grid h-6 w-6 shrink-0 place-items-center border border-[var(--border)] text-xs font-bold", q.type === "MULTIPLE" ? "rounded-md" : "rounded-full")}>{"ABCDEF"[i]}</span>
                   <div className="min-w-0 flex-1"><Inline text={o.text} />{result !== null && <div className="muted mt-1 text-xs"><Inline text={o.why} /></div>}</div>
                 </div>
               </button>
@@ -103,8 +117,10 @@ function QuestionCard({ q, index, onAnswer }: { q: SiteQuestion; index: number; 
       {result === null ? <button className="btn-primary mt-4" onClick={submit}>Submit answer</button> : (
         <div className="mt-5 space-y-4 border-t border-[var(--border)] pt-4">
           <div className={cn("flex flex-wrap items-center gap-2 rounded-xl px-4 py-3 font-semibold", result ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : "bg-rose-500/10 text-rose-700 dark:text-rose-300")}>
-            {result ? <CheckCircle2 size={18} /> : <XCircle size={18} />} {result ? "Correct" : "Incorrect"} · Answer: {q.type === "MCQ" ? <>({"ABCD"[correctIdx]}) <Inline text={q.options![correctIdx].text} /></> : q.answer}
+            {result ? <CheckCircle2 size={18} /> : <XCircle size={18} />} {result ? "Correct" : marks !== null && marks > 0 ? "Partially correct" : "Incorrect"} · Answer: {q.type === "MULTIPLE" ? q.options!.map((o, i) => (o.correct ? `(${"ABCDEF"[i]})` : null)).filter(Boolean).join(", ") : optionType ? <>({"ABCDEF"[correctIdx]}) <Inline text={q.options![correctIdx].text} /></> : q.answer}
+            {marks !== null && <span className="chip bg-[var(--surface)]">{marks > 0 ? "+" : ""}{marks} marks</span>}
           </div>
+          {(q.type === "MULTIPLE" || q.type === "MATCH") && <p className="muted text-xs">{q.type === "MULTIPLE" ? ADVANCED_SCHEME.multiple.note : ADVANCED_SCHEME.match.note} The actual scheme is printed on each JEE Advanced paper.</p>}
           <div className="grid gap-3 md:grid-cols-2">
             <div className="rounded-xl border border-[var(--border)] p-3"><div className="mb-1 flex items-center gap-1 text-xs font-bold uppercase text-electric-500"><Lightbulb size={13} /> Concept tested</div><Rich text={q.concept} className="text-sm" /></div>
             <div className="rounded-xl border border-[var(--border)] p-3"><div className="mb-1 flex items-center gap-1 text-xs font-bold uppercase text-violet-500"><Sigma size={13} /> Formula used</div><Rich text={q.formula} className="text-sm" /><div className="muted mt-1 text-xs"><strong>Why: </strong><Inline text={q.whyFormula} /></div></div>

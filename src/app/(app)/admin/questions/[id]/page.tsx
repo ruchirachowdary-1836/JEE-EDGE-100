@@ -15,6 +15,7 @@ export default async function QuestionAdmin({ params }: { params: { id: string }
         numericalTolerance: q.numericalTolerance, solution: q.solution, conceptTested: q.conceptTested, formulaUsed: q.formulaUsed, whyFormula: q.whyFormula, altMethod: q.altMethod ?? "",
         commonMistakes: q.commonMistakes, approxTimeSec: q.approxTimeSec, pyqYear: q.pyqYear?.toString() ?? "", pyqSession: q.pyqSession ?? "", pyqShift: q.pyqShift ?? "",
         pyqDate: q.pyqDate ? new Date(q.pyqDate.getTime() + 5.5 * 3600_000).toISOString().slice(0, 10) : "", sourceAttribution: q.sourceAttribution ?? "",
+        matchLeft: ((q.matchLists as { left?: string[] } | null)?.left ?? []).join("\n"), matchRight: ((q.matchLists as { right?: string[] } | null)?.right ?? []).join("\n"),
       }
     : {
         source: "PRACTICE", type: "MCQ", chapterSlug: chapters[0]?.slug ?? "", topicSlug: "", level: 1, difficulty: "MEDIUM", statement: "",

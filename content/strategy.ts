@@ -17,13 +17,16 @@ const MAIN: StrategyTrack = {
       key: "main-pattern",
       kind: "rule",
       title: "Examination pattern (Paper 1, B.E./B.Tech.)",
-      body: r`As in the JEE Main 2025 and 2026 information bulletins — **confirm every line in the JEE Main 2027 Information Bulletin on jeemain.nta.nic.in**:
+      body: r`From the official **JEE Main 2027 Information Bulletin** (NTA, uploaded 24 Oct 2026; checked 19 Nov 2026):
 
-- Computer-based test, **3 hours**, Physics, Chemistry and Mathematics.
-- Per subject: **Section A — 20 multiple-choice questions** (one correct option), **Section B — 5 numerical-value questions**. All 75 questions are compulsory; total **300 marks**.
-- Marking in both sections: **+4** correct, **−1** incorrect, **0** unanswered.
-- The exam is held in **two sessions** (January and April). Candidates may take one or both.
-- Results are **NTA scores**: percentiles computed separately for each shift and then merged, so that shifts of different difficulty are comparable. For candidates who take both sessions, the better NTA score is used for the merit list.
+- Computer-based test, **3 hours** (4 hours for PwD/PwBD candidates eligible for a scribe), Physics, Chemistry and Mathematics with equal weightage.
+- Per subject: **Section A — 20 multiple-choice questions**, **Section B — 5 numerical-value questions**. All 75 questions are compulsory; total **300 marks**.
+- Marking in both sections: **+4** correct, **−1** incorrect, **0** unanswered or marked for review.
+- **Section B answers are integers**: you type the value on an on-screen keypad, and the bulletin says the answer should be **rounded off to the nearest integer**. Use the constants given in the question.
+- **Session 1:** 20, 21, 22, 23, 24 and 28 January 2027. **Session 2:** 2, 3, 4, 5, 6 and 7 April 2027. Shifts: 9:00 a.m.–12:00 noon and 3:00–6:00 p.m. (IST). Candidates may take one or both sessions.
+- Results are **NTA scores** (percentiles computed per shift, then merged). For candidates who take both sessions, the **better of the two total NTA scores** is used for the merit list.
+
+Question Gym numericals sometimes have decimal answers: they are practice in JEE Advanced style. In the real JEE Main paper, round your Section B answer to the nearest integer.
 
 Syllabus: see the Syllabus page, checked against the official 2027 PDF.`,
     },
@@ -56,7 +59,7 @@ How to choose in Round 1: read the question, identify the governing idea in abou
       title: "Accuracy",
       body: r`- Aim for **95% or higher accuracy in what you attempt** in your later mocks. Track it on the Progress page.
 - Re-read the stem for "incorrect", "not", "minimum", "maximum", units and the quantity actually asked.
-- In numericals, check sign, unit and order of magnitude before entering. Check what form NTA asks for (integer or rounded value) in the paper's instructions.
+- In numericals, check sign, unit and order of magnitude before entering. JEE Main 2027 Section B takes integers only: round your final value to the nearest integer, and round only at the end.
 - If two attempts at a calculation disagree, mark it and come back later with a fresh mind.`,
     },
     {
@@ -92,6 +95,7 @@ const ADVANCED: StrategyTrack = {
       title: "How a JEE Advanced rank is decided",
       body: r`From recent JEE Advanced information brochures — **confirm in the 2027 brochure on jeeadv.ac.in**:
 
+- **JEE Advanced 2027 is on Sunday 23 May 2027** (official: jeeadv.ac.in, posted 13 Nov 2026; organised by IIT Delhi).
 - There are **two compulsory papers, Paper 1 and Paper 2, each 3 hours**, held on the same day. Each paper has Physics, Chemistry and Mathematics. A candidate must attempt **both** papers to be ranked.
 - The rank is based on the **aggregate marks in JEE Advanced** (Paper 1 + Paper 2). To be included in a rank list, a candidate must also reach the **minimum subject-wise and aggregate marks** set in the brochure.
 - **JEE Main percentiles do not enter the JEE Advanced rank.** JEE Main only decides who is eligible to sit JEE Advanced.

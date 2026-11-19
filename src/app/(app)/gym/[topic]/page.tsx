@@ -33,7 +33,7 @@ export default async function GymTopic({ params, searchParams }: { params: { top
         actions={<><Link href={`/topic/${topic.slug}`} className="btn-ghost">Notes</Link><Link href="/gym" className="btn-ghost">All topics</Link></>} />
       {questions.length === 0 ? <Pending what={`The Question Gym set for “${topic.name}”`} /> : (
         <GymLevels
-          questions={questions.map((q) => ({ ...q, type: q.type as "MCQ" | "NUMERICAL", difficulty: q.difficulty }))}
+          questions={questions.map((q) => ({ ...q, type: q.type as import("@/lib/advanced").QType, difficulty: q.difficulty }))}
           statuses={statuses}
           unlocked={unlocked}
           initialLevel={initialLevel}

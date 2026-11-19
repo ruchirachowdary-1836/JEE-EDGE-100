@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { apiUser, HttpError } from "@/lib/auth";
 import { body, handler } from "@/lib/api";
@@ -16,6 +17,7 @@ async function save(q: Q) {
     source: q.source, type: q.type, subjectId: chapter.subjectId, chapterId: chapter.id, topicId: topic?.id ?? null,
     level: q.source === "PRACTICE" ? q.level ?? null : q.level ?? null, difficulty: q.difficulty, statement: q.statement,
     numericalAnswer: q.type === "NUMERICAL" ? q.numericalAnswer ?? null : null, numericalTolerance: q.numericalTolerance,
+    matchLists: q.type === "MATCH" && q.matchLists ? q.matchLists : Prisma.JsonNull,
     solution: q.solution, conceptTested: q.conceptTested, formulaUsed: q.formulaUsed, whyFormula: q.whyFormula, altMethod: q.altMethod || null,
     commonMistakes: q.commonMistakes, approxTimeSec: q.approxTimeSec,
     pyqYear: q.source === "PYQ" ? q.pyqYear ?? null : null, pyqSession: q.source === "PYQ" ? q.pyqSession ?? null : null,
@@ -25,7 +27,7 @@ async function save(q: Q) {
   const row = q.id
     ? await db.question.update({ where: { id: q.id }, data: { ...data, reviewStatus: "PENDING" } })
     : await db.question.create({ data: { ...data, publishStatus: "DRAFT" } });
-  await syncOptions(db, row.id, q.type === "MCQ" ? q.options : []);
+  await syncOptions(db, row.id, q.type !== "NUMERICAL" ? q.options : []);
   return row.id;
 }
 
