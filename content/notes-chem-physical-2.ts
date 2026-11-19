@@ -287,8 +287,8 @@ Faraday: $m = ZIt = \frac{E}{F}It$.`,
 - Strong: $\Lambda_m = \Lambda_m^\circ - A\sqrt C$ (Debye–Hückel–Onsager).
 - Weak: $\alpha = \dfrac{\Lambda_m}{\Lambda_m^\circ}$; $K_a = \dfrac{C\alpha^2}{1 - \alpha}$.
 - Kohlrausch: $\Lambda_m^\circ = \nu_+\lambda_+^\circ + \nu_-\lambda_-^\circ$.
-- Faraday I: $m = ZIt = \dfrac{MIt}{nF}$; II: $\dfrac{m_1}{m_2} = \dfrac{E_1}{E_2}$.
-- 1 F = 96485 C = charge on 1 mol electrons; deposits 1 equivalent.
+- Faraday I: $m = ZIt = \dfrac{MIt}{nF}$; II: $\dfrac{m_1}{m_2} = \dfrac{E_1}{E_2}$. *(Beyond JEE Main 2027.)*
+- 1 F = 96485 C = charge on 1 mol electrons; deposits 1 equivalent. *(Beyond JEE Main 2027.)*
 - Products of electrolysis: aqueous NaCl gives H₂ at cathode and Cl₂ at anode (overpotential); dilute H₂SO₄ gives O₂ at anode.`,
     diagrams: r`Conductivity cell: two platinised electrodes of area $A$ separated by $l$.`,
     graphs: r`$\Lambda_m$ vs $\sqrt C$: straight line for strong electrolytes (extrapolate to $\Lambda^\circ$); steep curve for weak electrolytes (cannot extrapolate).`,

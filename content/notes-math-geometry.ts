@@ -67,16 +67,16 @@ Notation: $S = x^2 + y^2 + 2gx + 2fy + c$, $S_1 = S(x_1, y_1)$, $T = xx_1 + yy_1
     formulas: r`- Centre $(-g, -f)$, radius $\sqrt{g^2 + f^2 - c}$.
 - Diameter form: $(x - x_1)(x - x_2) + (y - y_1)(y - y_2) = 0$.
 - Parametric point: $(h + r\cos\theta, k + r\sin\theta)$.
-- Tangent at $(x_1, y_1)$ on the circle: $T = 0$, i.e. $xx_1 + yy_1 + g(x + x_1) + f(y + y_1) + c = 0$.
-- Tangent to $x^2 + y^2 = a^2$ with slope $m$: $y = mx \pm a\sqrt{1 + m^2}$.
-- Condition for $y = mx + c$ to touch $x^2 + y^2 = a^2$: $c^2 = a^2(1 + m^2)$.
-- Length of tangent from $(x_1, y_1)$: $\sqrt{S_1}$ — $P$ outside the circle.
-- Chord of contact from $(x_1, y_1)$: $T = 0$. Chord with midpoint $(x_1, y_1)$: $T = S_1$.
+- Tangent at $(x_1, y_1)$ on the circle: $T = 0$, i.e. $xx_1 + yy_1 + g(x + x_1) + f(y + y_1) + c = 0$. *(Beyond JEE Main 2027.)*
+- Tangent to $x^2 + y^2 = a^2$ with slope $m$: $y = mx \pm a\sqrt{1 + m^2}$. *(Beyond JEE Main 2027.)*
+- Condition for $y = mx + c$ to touch $x^2 + y^2 = a^2$: $c^2 = a^2(1 + m^2)$. *(Beyond JEE Main 2027.)*
+- Length of tangent from $(x_1, y_1)$: $\sqrt{S_1}$ — $P$ outside the circle. *(Beyond JEE Main 2027.)*
+- Chord of contact from $(x_1, y_1)$: $T = 0$. Chord with midpoint $(x_1, y_1)$: $T = S_1$. *(Beyond JEE Main 2027.)*
 - Length of chord at distance $d$ from centre: $2\sqrt{r^2 - d^2}$.
-- Two circles, centres $C_1, C_2$, radii $r_1, r_2$, $d = C_1C_2$: $d > r_1 + r_2$ separate (4 common tangents); $d = r_1 + r_2$ touch externally (3); $|r_1 - r_2| < d < r_1 + r_2$ intersect (2); $d = |r_1 - r_2|$ touch internally (1); $d < |r_1 - r_2|$ one inside the other (0).
-- Common chord / radical axis: $S_1 - S_2 = 0$ (coefficients of $x^2, y^2$ equal to 1).
-- Orthogonality: $2g_1g_2 + 2f_1f_2 = c_1 + c_2$.
-- Family through intersection of circle and line: $S + \lambda L = 0$; of two circles: $S_1 + \lambda S_2 = 0$ ($\lambda \ne -1$).`,
+- Two circles, centres $C_1, C_2$, radii $r_1, r_2$, $d = C_1C_2$: $d > r_1 + r_2$ separate (4 common tangents); $d = r_1 + r_2$ touch externally (3); $|r_1 - r_2| < d < r_1 + r_2$ intersect (2); $d = |r_1 - r_2|$ touch internally (1); $d < |r_1 - r_2|$ one inside the other (0). *(Beyond JEE Main 2027.)*
+- Common chord / radical axis: $S_1 - S_2 = 0$ (coefficients of $x^2, y^2$ equal to 1). *(Beyond JEE Main 2027.)*
+- Orthogonality: $2g_1g_2 + 2f_1f_2 = c_1 + c_2$. *(Beyond JEE Main 2027.)*
+- Family through intersection of circle and line: $S + \lambda L = 0$; of two circles: $S_1 + \lambda S_2 = 0$ ($\lambda \ne -1$). *(Beyond JEE Main 2027.)*`,
     diagrams: r`Draw the centre, the radius to the point of contact and the tangent at right angles; the perpendicular from the centre to a chord meets it at its midpoint.`,
     graphs: r`$x^2 + y^2 + 2gx + 2fy + c = 0$ is a point circle when $g^2 + f^2 = c$ and imaginary when $g^2 + f^2 < c$.`,
     specialCases: r`- Circle touching both axes: $(x \mp r)^2 + (y \mp r)^2 = r^2$.
@@ -116,13 +116,13 @@ Notation: $S = x^2 + y^2 + 2gx + 2fy + c$, $S_1 = S(x_1, y_1)$, $T = xx_1 + yy_1
 
 **Tangent condition for the ellipse.** Substituting $y = mx + c$ into $\frac{x^2}{a^2} + \frac{y^2}{b^2} = 1$ gives a quadratic in $x$; setting its discriminant to zero yields $c^2 = a^2m^2 + b^2$.`,
     formulas: r`- **Parabola $y^2 = 4ax$** ($a > 0$): focus $(a, 0)$; directrix $x = -a$; axis $y = 0$; latus rectum $4a$; parametric $(at^2, 2at)$; focal distance $x + a$.
-- Parabola tangent at $(x_1, y_1)$: $yy_1 = 2a(x + x_1)$; at $t$: $ty = x + at^2$; slope form $y = mx + \dfrac am$ ($m \ne 0$); condition $c = \dfrac am$.
-- Parabola normal at $t$: $y = -tx + 2at + at^3$; in slope form $y = mx - 2am - am^3$.
-- Focal chord: $t_1t_2 = -1$.
+- Parabola tangent at $(x_1, y_1)$: $yy_1 = 2a(x + x_1)$; at $t$: $ty = x + at^2$; slope form $y = mx + \dfrac am$ ($m \ne 0$); condition $c = \dfrac am$. *(Beyond JEE Main 2027.)*
+- Parabola normal at $t$: $y = -tx + 2at + at^3$; in slope form $y = mx - 2am - am^3$. *(Beyond JEE Main 2027.)*
+- Focal chord: $t_1t_2 = -1$. *(Beyond JEE Main 2027.)*
 - **Ellipse $\frac{x^2}{a^2} + \frac{y^2}{b^2} = 1$** ($a > b$): $e = \sqrt{1 - \frac{b^2}{a^2}}$; foci $(\pm ae, 0)$; directrices $x = \pm\dfrac ae$; latus rectum $\dfrac{2b^2}{a}$; parametric $(a\cos\theta, b\sin\theta)$; $SP = a - ex$, $S'P = a + ex$.
-- Ellipse tangent at $(x_1, y_1)$: $\dfrac{xx_1}{a^2} + \dfrac{yy_1}{b^2} = 1$; slope form $y = mx \pm\sqrt{a^2m^2 + b^2}$.
+- Ellipse tangent at $(x_1, y_1)$: $\dfrac{xx_1}{a^2} + \dfrac{yy_1}{b^2} = 1$; slope form $y = mx \pm\sqrt{a^2m^2 + b^2}$. *(Beyond JEE Main 2027.)*
 - **Hyperbola $\frac{x^2}{a^2} - \frac{y^2}{b^2} = 1$:** $e = \sqrt{1 + \frac{b^2}{a^2}}$; foci $(\pm ae, 0)$; directrices $x = \pm\dfrac ae$; latus rectum $\dfrac{2b^2}a$; parametric $(a\sec\theta, b\tan\theta)$; asymptotes $y = \pm\dfrac bax$.
-- Hyperbola tangent at $(x_1, y_1)$: $\dfrac{xx_1}{a^2} - \dfrac{yy_1}{b^2} = 1$; slope form $y = mx \pm\sqrt{a^2m^2 - b^2}$ — real only if $a^2m^2 > b^2$.
+- Hyperbola tangent at $(x_1, y_1)$: $\dfrac{xx_1}{a^2} - \dfrac{yy_1}{b^2} = 1$; slope form $y = mx \pm\sqrt{a^2m^2 - b^2}$ — real only if $a^2m^2 > b^2$. *(Beyond JEE Main 2027.)*
 - Conjugate hyperbola $\dfrac{x^2}{a^2} - \dfrac{y^2}{b^2} = -1$; $\dfrac1{e_1^2} + \dfrac1{e_2^2} = 1$.
 - Rectangular hyperbola $xy = c^2$: parametric $\left(ct, \dfrac ct\right)$, $e = \sqrt2$.
 - If $b > a$ in the ellipse form, the major axis is along $y$: $e = \sqrt{1 - a^2/b^2}$, foci $(0, \pm be)$.`,
@@ -171,7 +171,7 @@ $$d = \frac{|(\vec a_2 - \vec a_1)\cdot(\vec b_1\times\vec b_2)|}{|\vec b_1\time
 - Distance between parallel lines $\vec r = \vec a_i + \lambda\vec b$: $\dfrac{|(\vec a_2 - \vec a_1)\times\vec b|}{|\vec b|}$.
 - Coplanarity of two lines: $(\vec a_2 - \vec a_1)\cdot(\vec b_1\times\vec b_2) = 0$.
 - Perpendicular distance of a point $P$ from a line through $A$ with direction $\vec b$: $\dfrac{|\overrightarrow{AP}\times\vec b|}{|\vec b|}$.
-- *Enrichment (verify against the current syllabus):* plane $ax + by + cz + d = 0$; distance of a point $\dfrac{|ax_1 + by_1 + cz_1 + d|}{\sqrt{a^2+b^2+c^2}}$; angle between a line and a plane $\sin\phi = \dfrac{|\vec b\cdot\vec n|}{|\vec b||\vec n|}$.`,
+- *Beyond JEE Main 2027 (planes are not in the 2027 syllabus):* plane $ax + by + cz + d = 0$; distance of a point $\dfrac{|ax_1 + by_1 + cz_1 + d|}{\sqrt{a^2+b^2+c^2}}$; angle between a line and a plane $\sin\phi = \dfrac{|\vec b\cdot\vec n|}{|\vec b||\vec n|}$.`,
     diagrams: r`Sketch the two skew lines as non-touching rods and the common perpendicular joining them; $\vec b_1 \times \vec b_2$ points along it.`,
     graphs: r`The general point of a line, $(x_1 + a\lambda, \dots)$, traces the line as $\lambda$ varies — use it to find intersections and feet of perpendiculars.`,
     specialCases: r`- Lines along the axes have DCs $(1,0,0)$, $(0,1,0)$, $(0,0,1)$.
@@ -215,9 +215,9 @@ with $\hat n$ given by the right-hand rule.`,
 - $|\vec a\times\vec b| = |\vec a||\vec b|\sin\theta$ = area of parallelogram; triangle area $\dfrac12|\vec a\times\vec b|$.
 - Area of parallelogram with diagonals $\vec d_1, \vec d_2$: $\dfrac12|\vec d_1\times\vec d_2|$.
 - $|\vec a\times\vec b|^2 + (\vec a\cdot\vec b)^2 = |\vec a|^2|\vec b|^2$.
-- $[\vec a\,\vec b\,\vec c] = \begin{vmatrix}a_1&a_2&a_3\\b_1&b_2&b_3\\c_1&c_2&c_3\end{vmatrix}$ = volume of parallelepiped; tetrahedron volume $\dfrac16|[\vec a\,\vec b\,\vec c]|$.
-- Coplanar $\iff [\vec a\,\vec b\,\vec c] = 0$; cyclic: $[\vec a\,\vec b\,\vec c] = [\vec b\,\vec c\,\vec a] = [\vec c\,\vec a\,\vec b]$.
-- Vector triple product: $\vec a\times(\vec b\times\vec c) = (\vec a\cdot\vec c)\vec b - (\vec a\cdot\vec b)\vec c$.
+- $[\vec a\,\vec b\,\vec c] = \begin{vmatrix}a_1&a_2&a_3\\b_1&b_2&b_3\\c_1&c_2&c_3\end{vmatrix}$ = volume of parallelepiped; tetrahedron volume $\dfrac16|[\vec a\,\vec b\,\vec c]|$. *(Beyond JEE Main 2027.)*
+- Coplanar $\iff [\vec a\,\vec b\,\vec c] = 0$; cyclic: $[\vec a\,\vec b\,\vec c] = [\vec b\,\vec c\,\vec a] = [\vec c\,\vec a\,\vec b]$. *(Beyond JEE Main 2027.)*
+- Vector triple product: $\vec a\times(\vec b\times\vec c) = (\vec a\cdot\vec c)\vec b - (\vec a\cdot\vec b)\vec c$. *(Beyond JEE Main 2027.)*
 - $\hat i\cdot\hat i = 1$, $\hat i\cdot\hat j = 0$; $\hat i\times\hat j = \hat k$, $\hat j\times\hat k = \hat i$, $\hat k\times\hat i = \hat j$.`,
     diagrams: r`Draw $\vec a$ and $\vec b$ tail to tail: the parallelogram they span has area $|\vec a\times\vec b|$; the shadow of $\vec a$ on $\vec b$ is the projection.`,
     graphs: r`Right-hand rule: fingers from $\vec a$ to $\vec b$, thumb along $\vec a\times\vec b$.`,
@@ -229,13 +229,13 @@ with $\hat n$ given by the right-hand rule.`,
     patterns: r`- Angle between vectors and projections.
 - Area of triangle/parallelogram; volume of parallelepiped/tetrahedron.
 - Coplanarity conditions; solving for an unknown vector with given dot/cross products.
-- Vector triple product simplifications.`,
+- Vector triple product simplifications. *(Beyond JEE Main 2027.)*`,
     misconceptions: r`- "$\vec a\cdot\vec b = 0$ means one vector is zero." It can mean perpendicular.
 - "$\vec a\times\vec b = \vec b\times\vec a$." The sign flips.`,
     traps: r`- Dividing by vectors (undefined).
 - Sign errors in the determinant for the cross product.`,
     summary: r`- $\vec a\cdot\vec b = |a||b|\cos\theta$, $|\vec a\times\vec b| = |a||b|\sin\theta$.
-- $[\vec a\,\vec b\,\vec c]$ = volume; $= 0 \iff$ coplanar.
+- $[\vec a\,\vec b\,\vec c]$ = volume; $= 0 \iff$ coplanar. *(Beyond JEE Main 2027.)*
 - $\vec a\times(\vec b\times\vec c) = (\vec a\cdot\vec c)\vec b - (\vec a\cdot\vec b)\vec c$.`,
   }),
 
@@ -359,10 +359,10 @@ Allied angles: for $\frac{n\pi}{2} \pm \theta$, the function changes to its co-f
 - $2\sin A\cos B = \sin(A+B) + \sin(A-B)$; $2\cos A\cos B = \cos(A+B) + \cos(A-B)$; $2\sin A\sin B = \cos(A-B) - \cos(A+B)$.
 - $\sin\theta\sin(60^\circ-\theta)\sin(60^\circ+\theta) = \dfrac14\sin3\theta$ (and similarly for $\cos$, $\tan$).
 - $-\sqrt{a^2+b^2} \le a\sin\theta + b\cos\theta \le \sqrt{a^2+b^2}$.
-- General solutions: $\sin\theta = 0 \Rightarrow \theta = n\pi$; $\cos\theta = 0 \Rightarrow \theta = (2n+1)\frac\pi2$; $\tan\theta = 0 \Rightarrow n\pi$.
-- $\sin\theta = \sin\alpha \Rightarrow \theta = n\pi + (-1)^n\alpha$; $\cos\theta = \cos\alpha \Rightarrow \theta = 2n\pi \pm \alpha$; $\tan\theta = \tan\alpha \Rightarrow \theta = n\pi + \alpha$ — $n \in \mathbb Z$.
-- $\sin^2\theta = \sin^2\alpha$, $\cos^2\theta = \cos^2\alpha$ or $\tan^2\theta = \tan^2\alpha$ $\Rightarrow \theta = n\pi \pm \alpha$.
-- Triangle relations (enrichment — check whether "properties of triangles" is in the current syllabus): Sine rule $\dfrac{a}{\sin A} = \dfrac{b}{\sin B} = \dfrac{c}{\sin C} = 2R$; Cosine rule $\cos A = \dfrac{b^2 + c^2 - a^2}{2bc}$; Projection formula $a = b\cos C + c\cos B$; area $\Delta = \tfrac12bc\sin A$.
+- General solutions: $\sin\theta = 0 \Rightarrow \theta = n\pi$; $\cos\theta = 0 \Rightarrow \theta = (2n+1)\frac\pi2$; $\tan\theta = 0 \Rightarrow n\pi$. *(Beyond JEE Main 2027.)*
+- $\sin\theta = \sin\alpha \Rightarrow \theta = n\pi + (-1)^n\alpha$; $\cos\theta = \cos\alpha \Rightarrow \theta = 2n\pi \pm \alpha$; $\tan\theta = \tan\alpha \Rightarrow \theta = n\pi + \alpha$ — $n \in \mathbb Z$. *(Beyond JEE Main 2027.)*
+- $\sin^2\theta = \sin^2\alpha$, $\cos^2\theta = \cos^2\alpha$ or $\tan^2\theta = \tan^2\alpha$ $\Rightarrow \theta = n\pi \pm \alpha$. *(Beyond JEE Main 2027.)*
+- Triangle relations (beyond JEE Main 2027 — "properties of triangles" is not in the 2027 syllabus): Sine rule $\dfrac{a}{\sin A} = \dfrac{b}{\sin B} = \dfrac{c}{\sin C} = 2R$; Cosine rule $\cos A = \dfrac{b^2 + c^2 - a^2}{2bc}$; Projection formula $a = b\cos C + c\cos B$; area $\Delta = \tfrac12bc\sin A$.
 - Values: $\sin15^\circ = \dfrac{\sqrt3 - 1}{2\sqrt2}$, $\cos15^\circ = \dfrac{\sqrt3+1}{2\sqrt2}$, $\tan15^\circ = 2 - \sqrt3$, $\sin18^\circ = \dfrac{\sqrt5 - 1}{4}$, $\cos36^\circ = \dfrac{\sqrt5 + 1}{4}$.`,
     diagrams: r`The transformation lab (choose $\sin x$) shows amplitude, period and phase shifts of trigonometric graphs.`,
     graphs: r`$y = \sin x$ and $y = \cos x$ oscillate between $-1$ and $1$; $\tan x$ has vertical asymptotes at $x = (2n+1)\frac\pi2$. The number of solutions of $f(x) = g(x)$ equals the number of intersections of their graphs.`,

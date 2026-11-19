@@ -76,7 +76,7 @@ $f$ is differentiable at $a$ if this limit exists; then $f$ is also continuous a
 - $\dfrac d{dx}\sin x = \cos x$, $\cos x \to -\sin x$, $\tan x \to \sec^2 x$, $\cot x \to -\csc^2x$, $\sec x \to \sec x\tan x$, $\csc x \to -\csc x\cot x$.
 - $\dfrac d{dx}\sin^{-1}x = \dfrac{1}{\sqrt{1-x^2}}$, $\cos^{-1}x \to -\dfrac1{\sqrt{1-x^2}}$ ($|x| < 1$); $\tan^{-1}x \to \dfrac1{1+x^2}$, $\cot^{-1}x \to -\dfrac1{1+x^2}$; $\sec^{-1}x \to \dfrac1{|x|\sqrt{x^2-1}}$, $\csc^{-1}x \to -\dfrac1{|x|\sqrt{x^2-1}}$ ($|x| > 1$).
 - $\dfrac d{dx}|x| = \dfrac{x}{|x|}$ ($x \ne 0$).
-- Parametric: $\dfrac{dy}{dx} = \dfrac{dy/dt}{dx/dt}$, $\dfrac{d^2y}{dx^2} = \dfrac{\frac{d}{dt}\left(\frac{dy}{dx}\right)}{dx/dt}$ — needs $dx/dt \ne 0$.
+- Parametric: $\dfrac{dy}{dx} = \dfrac{dy/dt}{dx/dt}$, $\dfrac{d^2y}{dx^2} = \dfrac{\frac{d}{dt}\left(\frac{dy}{dx}\right)}{dx/dt}$ — needs $dx/dt \ne 0$. *(Beyond JEE Main 2027.)*
 - Inverse function: $\dfrac{dx}{dy} = \dfrac{1}{dy/dx}$ — where $dy/dx \ne 0$.
 - Logarithmic: if $y = u^v$, then $\dfrac{dy}{dx} = u^v\left(v'\ln u + \dfrac{vu'}{u}\right)$ ($u > 0$).
 - Leibniz (product, $n$th derivative): $(uv)^{(n)} = \sum {}\binom nr u^{(n-r)}v^{(r)}$.`,
@@ -119,13 +119,13 @@ On a closed interval $[a, b]$, absolute extrema occur at critical points or at t
     derivations: r`**Tangent and normal.** The tangent at $(x_1, y_1)$ has slope $m = f'(x_1)$: $y - y_1 = m(x - x_1)$. The normal is perpendicular, slope $-1/m$: $y - y_1 = -\frac1m(x - x_1)$.
 
 **LMVT from Rolle.** Apply Rolle's theorem to $g(x) = f(x) - \frac{f(b)-f(a)}{b-a}x$, which has $g(a) = g(b)$.`,
-    formulas: r`- Tangent: $y - y_1 = f'(x_1)(x - x_1)$; normal: $y - y_1 = -\dfrac{1}{f'(x_1)}(x - x_1)$ — $f'(x_1) \ne 0$ for the normal in this form.
-- Horizontal tangent: $f'(x_1) = 0$; vertical tangent: $\dfrac{dx}{dy} = 0$.
-- Angle between curves: $\tan\theta = \left|\dfrac{m_1 - m_2}{1 + m_1m_2}\right|$ at the point of intersection; orthogonal if $m_1m_2 = -1$.
-- Length of tangent/normal/subtangent/subnormal (curve $y = f(x)$): subtangent $= \left|\dfrac{y_1}{m}\right|$, subnormal $= |y_1m|$.
+    formulas: r`- Tangent: $y - y_1 = f'(x_1)(x - x_1)$; normal: $y - y_1 = -\dfrac{1}{f'(x_1)}(x - x_1)$ — $f'(x_1) \ne 0$ for the normal in this form. *(Beyond JEE Main 2027.)*
+- Horizontal tangent: $f'(x_1) = 0$; vertical tangent: $\dfrac{dx}{dy} = 0$. *(Beyond JEE Main 2027.)*
+- Angle between curves: $\tan\theta = \left|\dfrac{m_1 - m_2}{1 + m_1m_2}\right|$ at the point of intersection; orthogonal if $m_1m_2 = -1$. *(Beyond JEE Main 2027.)*
+- Length of tangent/normal/subtangent/subnormal (curve $y = f(x)$): subtangent $= \left|\dfrac{y_1}{m}\right|$, subnormal $= |y_1m|$. *(Beyond JEE Main 2027.)*
 - Increasing: $f'(x) > 0$; decreasing: $f'(x) < 0$.
 - Second-derivative test: $f'(c) = 0$, $f''(c) < 0$ ⇒ max; $f''(c) > 0$ ⇒ min.
-- Rolle: $f'(c) = 0$; LMVT: $f'(c) = \dfrac{f(b) - f(a)}{b - a}$ — need continuity on $[a,b]$ and differentiability on $(a,b)$.
+- Rolle: $f'(c) = 0$; LMVT: $f'(c) = \dfrac{f(b) - f(a)}{b - a}$ — need continuity on $[a,b]$ and differentiability on $(a,b)$. *(Beyond JEE Main 2027.)*
 - Rate of change: $\dfrac{dy}{dt} = \dfrac{dy}{dx}\cdot\dfrac{dx}{dt}$.
 - Approximation: $\Delta y \approx f'(x)\,\Delta x$ — small $\Delta x$.`,
     diagrams: r`Use the derivative visualiser: move $x_0$ and watch the tangent flatten at peaks and valleys.`,

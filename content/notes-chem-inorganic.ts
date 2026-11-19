@@ -99,11 +99,11 @@ Hydride trends: thermal stability decreases down the group; reducing character a
     formulas: r`- Hydride thermal stability: NH₃ > PH₃ > AsH₃; H₂O > H₂S; HF > HCl > HBr > HI.
 - Acid strength: HI > HBr > HCl > HF; H₂Te > H₂Se > H₂S > H₂O.
 - Boiling points: NH₃ > PH₃ < AsH₃; H₂O highest in group 16; HF highest in group 17 (H-bonding).
-- Oxoacid acidity: HClO₄ > HClO₃ > HClO₂ > HClO; HOCl > HOBr > HOI.
-- Basicity: H₃PO₄ 3, H₃PO₃ 2, H₃PO₂ 1; H₄P₂O₇ 4.
-- Xenon fluorides: XeF₂ linear, XeF₄ square planar, XeF₆ distorted octahedral; XeO₃ pyramidal.
-- Interhalogens: ClF₃ T-shaped, BrF₅ square pyramidal, IF₇ pentagonal bipyramidal.
-- Oxides of nitrogen: N₂O (+1), NO (+2, paramagnetic), N₂O₃ (+3), NO₂ (+4, paramagnetic, dimerises), N₂O₅ (+5).
+- Oxoacid acidity: HClO₄ > HClO₃ > HClO₂ > HClO; HOCl > HOBr > HOI. *(Beyond JEE Main 2027.)*
+- Basicity: H₃PO₄ 3, H₃PO₃ 2, H₃PO₂ 1; H₄P₂O₇ 4. *(Beyond JEE Main 2027.)*
+- Xenon fluorides: XeF₂ linear, XeF₄ square planar, XeF₆ distorted octahedral; XeO₃ pyramidal. *(Beyond JEE Main 2027.)*
+- Interhalogens: ClF₃ T-shaped, BrF₅ square pyramidal, IF₇ pentagonal bipyramidal. *(Beyond JEE Main 2027.)*
+- Oxides of nitrogen: N₂O (+1), NO (+2, paramagnetic), N₂O₃ (+3), NO₂ (+4, paramagnetic, dimerises), N₂O₅ (+5). *(Beyond JEE Main 2027.)*
 - Ozone: bent, resonance; strong oxidant. Sulfur: S₈ crown; H₂SO₄ by contact process (V₂O₅).
 - Bond energy anomaly: F–F < Cl–Cl > Br–Br > I–I.`,
     diagrams: r`Structures: P₄ tetrahedron, P₄O₁₀ cage, S₈ crown, H₂SO₄ tetrahedral, XeF₄ square planar.`,

@@ -10,13 +10,8 @@ import { PHYSICS_FORMULAS } from "../content/formulas-physics";
 import { CHEMISTRY_FORMULAS, MATHEMATICS_FORMULAS } from "../content/formulas-chem-math";
 import { COMPARISONS } from "../content/comparisons";
 import { ANIMATIONS } from "../content/animations";
-import { PHYSICS_QUESTIONS } from "../content/questions-physics";
-import { CHEMISTRY_QUESTIONS } from "../content/questions-chemistry";
-import { MATHEMATICS_QUESTIONS } from "../content/questions-mathematics";
-import { PHYSICS_QUESTIONS_2 } from "../content/questions-physics-2";
-import { CHEMISTRY_QUESTIONS_2 } from "../content/questions-chemistry-2";
-import { MATHEMATICS_QUESTIONS_2 } from "../content/questions-mathematics-2";
 import { NAMED_REACTIONS, INORGANIC_EXCEPTIONS, CONCEPT_CARDS } from "../content/chemistry";
+import { ALL_QUESTIONS } from "../content/questions";
 import type { QuestionSeed } from "../content/types";
 import { syncOptions } from "../src/lib/options";
 
@@ -54,8 +49,8 @@ async function main() {
         usedTopicSlugs.add(slug);
         const topic = await db.topic.upsert({
           where: { slug },
-          create: { slug, name: t.name, order: ti, subtopics: t.subtopics, chapterId: chapter.id },
-          update: { name: t.name, order: ti, subtopics: t.subtopics, chapterId: chapter.id },
+          create: { slug, name: t.name, order: ti, subtopics: t.subtopics, beyondMain: t.beyondMain ?? [], chapterId: chapter.id },
+          update: { name: t.name, order: ti, subtopics: t.subtopics, beyondMain: t.beyondMain ?? [], chapterId: chapter.id },
         });
         topicId[slug] = topic.id;
       }
@@ -116,7 +111,7 @@ async function main() {
 
   const counters: Record<string, number> = {};
   const seededIds: { id: string; subject: string; type: QuestionType }[] = [];
-  const all: QuestionSeed[] = [...PHYSICS_QUESTIONS, ...PHYSICS_QUESTIONS_2, ...CHEMISTRY_QUESTIONS, ...CHEMISTRY_QUESTIONS_2, ...MATHEMATICS_QUESTIONS, ...MATHEMATICS_QUESTIONS_2];
+  const all: QuestionSeed[] = ALL_QUESTIONS;
   for (const q of all) {
     const key = `${q.topic}-${q.level}`;
     counters[key] = (counters[key] ?? 0) + 1;

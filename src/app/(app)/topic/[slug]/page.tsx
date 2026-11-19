@@ -7,6 +7,7 @@ import { PageHeader, Pending, ReviewBadge, StageBadge, SubjectChip, Card } from 
 import { TeX } from "@/components/Rich";
 import { NotesReader } from "./NotesReader";
 import { TopicActions } from "./TopicActions";
+import { SyllabusScope } from "@/components/SyllabusScope";
 
 export default async function TopicPage({ params }: { params: { slug: string } }) {
   const user = await requireUser();
@@ -50,6 +51,7 @@ export default async function TopicPage({ params }: { params: { slug: string } }
         bookmarked={!!bookmark}
         gymCount={gymCount}
       />
+      <SyllabusScope subtopics={topic.subtopics} beyondMain={topic.beyondMain} />
       {note ? (
         <NotesReader
           topicId={topic.id}

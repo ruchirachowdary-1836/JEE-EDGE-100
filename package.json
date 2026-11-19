@@ -19,7 +19,8 @@
     "test:unit": "tsx --conditions=react-server --test tests/unit.test.ts",
     "test:e2e": "tsx tests/e2e.ts",
     "test:crawl": "tsx tests/crawl.ts",
-    "check:content": "tsx scripts/check-notes.ts && tsx scripts/check-questions.ts && tsx scripts/audit-formulas.ts"
+    "test:answers": "tsx tests/verify-answers.ts",
+    "check:content": "tsx scripts/check-notes.ts && tsx scripts/check-questions.ts && tsx tests/verify-answers.ts && tsx scripts/audit-formulas.ts && tsx scripts/check-elements.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

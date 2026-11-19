@@ -5,6 +5,8 @@ import { Card, PageHeader, Pending, ReviewBadge, SubjectChip } from "@/component
 import { TeX } from "@/components/Rich";
 import { TOPICS, topicBySlug, NOTES, FORMULAS, ANIMATIONS, QUESTIONS } from "@site/lib/data";
 import { StaticNotes } from "./StaticNotes";
+import { SyllabusScope } from "@/components/SyllabusScope";
+import { StudiedToggle } from "./StudiedToggle";
 
 export const generateStaticParams = () => TOPICS.map((t) => ({ slug: t.slug }));
 export const dynamicParams = false;
@@ -20,7 +22,8 @@ export default function TopicPage({ params }: { params: { slug: string } }) {
     <div>
       <PageHeader eyebrow={t.chapterName} title={t.name}
         subtitle={<span className="flex flex-wrap items-center gap-2"><SubjectChip slug={t.subject} />{sections && <ReviewBadge status="PENDING" />}</span>}
-        actions={<>{qn > 0 && <Link href={`/gym/${t.slug}`} className="btn-primary"><Dumbbell size={16} /> Practise ({qn})</Link>}<Link href={`/chapter/${t.chapterSlug}`} className="btn-ghost">Chapter</Link></>} />
+        actions={<><StudiedToggle topic={t.slug} />{qn > 0 && <Link href={`/gym/${t.slug}`} className="btn-primary"><Dumbbell size={16} /> Practise ({qn})</Link>}<Link href={`/chapter/${t.chapterSlug}`} className="btn-ghost">Chapter</Link></>} />
+      <SyllabusScope subtopics={t.subtopics} beyondMain={t.beyondMain} />
       {sections ? <StaticNotes sections={sections} /> : (
         <div className="space-y-4">
           <Pending what={`The master notes for “${t.name}”`} />

@@ -40,7 +40,7 @@ const RAW = `1 H Hydrogen 1.008 1 1 nonmetal 2.20
 27 Co Cobalt 58.933 9 4 transition 1.88
 28 Ni Nickel 58.693 10 4 transition 1.91
 29 Cu Copper 63.546 11 4 transition 1.90
-30 Zn Zinc 65.38 12 4 transition 1.65
+30 Zn Zinc 65.38 12 4 post-transition 1.65
 31 Ga Gallium 69.723 13 4 post-transition 1.81
 32 Ge Germanium 72.630 14 4 metalloid 2.01
 33 As Arsenic 74.922 15 4 metalloid 2.18
@@ -58,7 +58,7 @@ const RAW = `1 H Hydrogen 1.008 1 1 nonmetal 2.20
 45 Rh Rhodium 102.91 9 5 transition 2.28
 46 Pd Palladium 106.42 10 5 transition 2.20
 47 Ag Silver 107.87 11 5 transition 1.93
-48 Cd Cadmium 112.41 12 5 transition 1.69
+48 Cd Cadmium 112.41 12 5 post-transition 1.69
 49 In Indium 114.82 13 5 post-transition 1.78
 50 Sn Tin 118.71 14 5 post-transition 1.96
 51 Sb Antimony 121.76 15 5 metalloid 2.05
@@ -90,7 +90,7 @@ const RAW = `1 H Hydrogen 1.008 1 1 nonmetal 2.20
 77 Ir Iridium 192.22 9 6 transition 2.20
 78 Pt Platinum 195.08 10 6 transition 2.28
 79 Au Gold 196.97 11 6 transition 2.54
-80 Hg Mercury 200.59 12 6 transition 2.00
+80 Hg Mercury 200.59 12 6 post-transition 2.00
 81 Tl Thallium 204.38 13 6 post-transition 1.62
 82 Pb Lead 207.2 14 6 post-transition 2.33
 83 Bi Bismuth 208.98 15 6 post-transition 2.02
@@ -122,7 +122,7 @@ const RAW = `1 H Hydrogen 1.008 1 1 nonmetal 2.20
 109 Mt Meitnerium 278 9 7 transition -
 110 Ds Darmstadtium 281 10 7 transition -
 111 Rg Roentgenium 282 11 7 transition -
-112 Cn Copernicium 285 12 7 transition -
+112 Cn Copernicium 285 12 7 post-transition -
 113 Nh Nihonium 286 13 7 post-transition -
 114 Fl Flerovium 289 14 7 post-transition -
 115 Mc Moscovium 290 15 7 post-transition -
@@ -217,3 +217,10 @@ export function unpairedInSubshell(subshell: string, electrons: number) {
   const orbitals = CAP[subshell[1]] / 2;
   return electrons <= orbitals ? electrons : 2 * orbitals - electrons;
 }
+
+/** Elements without a standard atomic weight (no stable isotope and no characteristic terrestrial composition):
+ * the listed value is the mass number of the longest-lived isotope. */
+export const hasStandardWeight = (z: number) => !(z === 43 || z === 61 || (z >= 84 && z <= 89) || z >= 93);
+export const massLabel = (e: Element) => (hasStandardWeight(e.z) ? String(e.mass) : `[${e.mass}]`);
+/** Group 12 is in the d-block but is not counted as transition elements (d¹⁰ in the atom and the common ion). */
+export const isGroup12 = (z: number) => z === 30 || z === 48 || z === 80 || z === 112;

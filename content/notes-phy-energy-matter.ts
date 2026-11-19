@@ -486,9 +486,9 @@ Conduction: $\frac{dQ}{dt} = \frac{KA\Delta T}{L}$. Radiation: Stefan–Boltzman
 - Apparent expansion of a liquid: $\gamma_{\text{app}} = \gamma_{\text{liquid}} - \gamma_{\text{vessel}}$.
 - $Q = mc\Delta T$; $Q = mL$; heat lost = heat gained.
 - Conduction: $H = \dfrac{dQ}{dt} = \dfrac{KA(T_1 - T_2)}{L}$; $R_{\text{th}} = \dfrac{L}{KA}$; series $R = R_1 + R_2$, parallel $\dfrac1R = \dfrac1{R_1} + \dfrac1{R_2}$.
-- Stefan–Boltzmann: $P = e\sigma AT^4$; net $P = e\sigma A(T^4 - T_0^4)$; $\sigma = 5.67\times10^{-8}\,\text{W m}^{-2}\text{K}^{-4}$.
-- Wien's law: $\lambda_mT = b$, $b \approx 2.9\times10^{-3}\,\text{m K}$.
-- Newton's cooling: $\dfrac{dT}{dt} = -k(T - T_0)$; average form $\dfrac{T_1 - T_2}{t} = k\left(\dfrac{T_1 + T_2}2 - T_0\right)$.
+- Stefan–Boltzmann: $P = e\sigma AT^4$; net $P = e\sigma A(T^4 - T_0^4)$; $\sigma = 5.67\times10^{-8}\,\text{W m}^{-2}\text{K}^{-4}$. *(Beyond JEE Main 2027.)*
+- Wien's law: $\lambda_mT = b$, $b \approx 2.9\times10^{-3}\,\text{m K}$. *(Beyond JEE Main 2027.)*
+- Newton's cooling: $\dfrac{dT}{dt} = -k(T - T_0)$; average form $\dfrac{T_1 - T_2}{t} = k\left(\dfrac{T_1 + T_2}2 - T_0\right)$. *(Beyond JEE Main 2027.)*
 - Temperature scales: $\dfrac{C}{100} = \dfrac{F - 32}{180} = \dfrac{K - 273.15}{100}$.`,
     diagrams: r`Heating curve of ice: rising temperature segments (specific heat) separated by flat segments (melting, boiling — latent heat).`,
     graphs: r`Black-body spectra: peak shifts to shorter wavelength as $T$ rises (Wien), area under curve $\propto T^4$.`,
@@ -506,6 +506,6 @@ Conduction: $\frac{dQ}{dt} = \frac{KA\Delta T}{L}$. Radiation: Stefan–Boltzman
 - Using °C instead of K in Stefan's law.`,
     summary: r`- $\beta = 2\alpha$, $\gamma = 3\alpha$; $Q = mc\Delta T$, $Q = mL$.
 - $H = KA\Delta T/L$; $P = e\sigma AT^4$; $\lambda_mT = b$.
-- Newton's cooling $\frac{dT}{dt} = -k(T - T_0)$.`,
+- Newton's cooling $\frac{dT}{dt} = -k(T - T_0)$. *(Beyond JEE Main 2027.)*`,
   }),
 ];

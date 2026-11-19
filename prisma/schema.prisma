@@ -205,6 +205,8 @@ model Topic {
   name          String
   order         Int
   subtopics     String[]      @default([])
+  /// taught on the platform but not listed in the JEE Main 2027 syllabus
+  beyondMain    String[]      @default([])
   summary       String        @default("")
   publishStatus PublishStatus @default(PUBLISHED)
   reviewStatus  ReviewStatus  @default(PENDING)

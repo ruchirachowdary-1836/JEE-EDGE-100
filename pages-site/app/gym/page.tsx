@@ -2,10 +2,10 @@ import Link from "next/link";
 import { Card, PageHeader, SubjectChip } from "@/components/ui";
 import { QUESTIONS, TOPICS } from "@site/lib/data";
 import { GymProgressBadge } from "./[topic]/StaticGym";
+import { GYM_LEVELS } from "@/lib/levels";
 
 export const metadata = { title: "Question Gym" };
 
-const LEVELS = ["Fundamental understanding", "Basic application", "Multi-step application", "JEE Main level", "Challenging problem-solving"];
 
 export default function GymPage() {
   const topics = TOPICS.filter((t) => QUESTIONS.some((q) => q.topic === t.slug));
@@ -14,7 +14,7 @@ export default function GymPage() {
       <PageHeader eyebrow="Progressive problem-solving" title="Question Gym" subtitle="Five levels per topic. Each next level unlocks after you attempt every question of the current level with at least 70% accuracy (all attempts count). These are original practice questions, not previous-year questions." />
       <Card className="mb-6">
         <div className="grid gap-3 sm:grid-cols-5">
-          {LEVELS.map((l, i) => <div key={l} className="rounded-xl bg-[var(--surface-2)] p-3"><div className="text-xs font-bold text-violet-500">Level {i + 1}</div><div className="text-sm font-semibold">{l}</div></div>)}
+          {GYM_LEVELS.map((l) => <div key={l.level} className="rounded-xl bg-[var(--surface-2)] p-3"><div className="text-xs font-bold text-violet-500">Level {l.level}</div><div className="text-sm font-semibold">{l.name}</div><div className="muted mt-1 text-xs">{l.description}</div></div>)}
         </div>
       </Card>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">

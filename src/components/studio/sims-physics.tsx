@@ -90,7 +90,7 @@ export const shm: SimDef = {
         <rect x={px - 12} y={cy - 12} width={24} height={24} rx={5} fill="#2b8cff" />
         <Arrow x1={px} y1={cy + 24} x2={px + v * 0.35} y2={cy + 24} color="#10b981" />
         <Arrow x1={px} y1={cy + 40} x2={px + a * 0.35} y2={cy + 40} color="#f43f5e" />
-        <Label x={cx} y={cy + A + 40} anchor="middle" size={11} color="var(--muted)">green: velocity · red: acceleration (always toward centre)</Label>
+        <Label x={cx} y={cy + A + 40} anchor="middle" size={11} color="var(--muted)">green: velocity · red: acceleration (always toward the mean position)</Label>
         <line x1={gx} y1={gy} x2={gx + gw} y2={gy} className="stroke-slate-400" />
         <line x1={gx} y1={40} x2={gx} y2={300} className="stroke-slate-400" />
         <path d={path(trace)} fill="none" stroke="#2b8cff" strokeWidth={2.5} />

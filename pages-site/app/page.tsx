@@ -1,23 +1,25 @@
 import Link from "next/link";
-import { BookOpen, Clapperboard, Sigma, Dumbbell, FlaskConical, Repeat, ArrowRight, Github, Trophy, FileText } from "lucide-react";
+import { BookOpen, Clapperboard, Sigma, Dumbbell, FlaskConical, Repeat, ArrowRight, Github, Trophy, FileText, Timer, LineChart } from "lucide-react";
 import { ANIMATIONS, CHAPTERS, FORMULAS, NOTES, QUESTIONS, TOPICS } from "@site/lib/data";
 
 const FEATURES = [
-  { href: "/strategy", icon: Trophy, title: "AIR 100 Playbook", text: "Paper strategy, 3-hour time plan, accuracy rules, the mistake-analysis loop and how to use the last 60 days." },
+  { href: "/strategy", icon: Trophy, title: "Exam Playbook", text: "Separate JEE Main 2027 and JEE Advanced 2027 strategies: pattern, marking, partial marking, time plans, and the AIR 100 framework for Advanced." },
   { href: "/formulas/sheet", icon: FileText, title: "Complete formula sheet", text: "Every formula from all three subjects, with the condition under which it holds. Printable." },
   { href: "/syllabus", icon: BookOpen, title: "Syllabus & master notes", text: `${CHAPTERS.length} chapters, ${TOPICS.length} topics. ${Object.keys(NOTES).length} topics have full 17-part notes with live diagrams.` },
   { href: "/studio", icon: Clapperboard, title: "Concept Studio", text: `${ANIMATIONS.length} interactive simulations with play, pause, slow motion and step mode.` },
   { href: "/formulas", icon: Sigma, title: "Formula Lab", text: `${FORMULAS.length} formulas with derivation, conditions, when NOT to use them and worked examples.` },
   { href: "/gym", icon: Dumbbell, title: "Question Gym", text: `${QUESTIONS.length} original practice questions over 5 levels, each with a full solution.` },
   { href: "/chemistry", icon: FlaskConical, title: "Chemistry Lab", text: "Periodic table, configuration explorer, VSEPR, organic reaction map, named reactions." },
-  { href: "/revision", icon: Repeat, title: "Flashcards", text: "Formula, concept and reaction flashcards for quick revision." },
+  { href: "/revision", icon: Repeat, title: "Flashcards", text: "Spaced-repetition flashcards: due dates, missed-card catch-up, chapter filters and review history." },
+  { href: "/test", icon: Timer, title: "Timed test", text: "Build a timed test with JEE Main marking and a question palette; results go to your progress page." },
+  { href: "/progress", icon: LineChart, title: "My progress", text: "Subject- and chapter-wise progress from your own saved activity. No rank predictions." },
 ];
 
 export default function Home() {
   return (
     <div>
       <section className="card bg-hero card-pad mb-8">
-        <div className="chip mb-4 bg-electric-500/10 text-electric-600 dark:text-electric-300">JEE Main 2027 · Physics · Chemistry · Mathematics</div>
+        <div className="chip mb-4 bg-electric-500/10 text-electric-600 dark:text-electric-300">JEE Main 2027 · JEE Advanced 2027 · Physics · Chemistry · Mathematics</div>
         <h1 className="font-display text-3xl font-bold leading-tight tracking-tight sm:text-5xl">
           Understand every concept.<br />
           <span className="bg-gradient-to-r from-electric-400 to-violet-400 bg-clip-text text-transparent">Justify every formula.</span>
@@ -25,7 +27,7 @@ export default function Home() {
         <p className="muted mt-4 max-w-2xl">Structured, human-written preparation material with fixed, predictable logic — no chatbots and no generated answers.</p>
         <div className="mt-6 flex flex-wrap gap-3">
           <Link href="/syllabus" className="btn-primary">Start with the syllabus <ArrowRight size={16} /></Link>
-          <Link href="/strategy" className="btn-ghost"><Trophy size={16} /> AIR 100 Playbook</Link>
+          <Link href="/strategy" className="btn-ghost"><Trophy size={16} /> Exam Playbook</Link>
           <a href="https://github.com/ruchirachowdary-1836/JEE-EDGE-100" className="btn-ghost"><Github size={16} /> Source code</a>
         </div>
       </section>

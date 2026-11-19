@@ -12,14 +12,14 @@ The app holds a starter content library. It is real content, not placeholder tex
 
 | Content | Included | Status |
 |---|---|---|
-| Syllabus: 3 subjects, 54 chapters, 114 topics with subtopics | All chapters in the NTA JEE Main syllabus | Published |
+| Syllabus: 3 subjects, 54 chapters, 114 topics with subtopics | Mapped line by line to the official JEE Main 2027 syllabus (verified 18 Nov 2026); material beyond it is labelled | Published |
 | Master notes (17 sections + formula sheet) | **All 114 topics** | Published · *awaiting expert review* |
 | Formula sheets | Every topic, each formula with its validity condition; combined page `/formulas/sheet`; `npm run check:content` audits 184 standard JEE formulas | Published · *awaiting expert review* |
 | Formula Lab entries (all 21 fields + derivation steps) | 15 formulas | Published · *awaiting expert review* |
 | Formula comparisons | 7 (velocity vs speed, order vs molecularity, …) | Published · *awaiting expert review* |
-| Question Gym questions (5 levels × 2 per level, full solutions, every option explained) | 120 original practice questions across 12 topics | Published · *awaiting expert review* |
+| Question Gym questions (levels 1–5, Level 5 = JEE Advanced style; full solutions, every option explained) | 335 original practice questions: each of the 54 chapters has at least one five-level set (55 of 114 topics). All 155 numerical answers are recomputed independently by `npm run test:answers` | Published · *awaiting expert review* |
 | Mock tests | Full Mock Test 1 (75 questions, JEE pattern) and Starter Mock 1 (30) | Published |
-| AIR 100 Playbook | Exam strategy page (`/strategy`) | Published |
+| Exam Playbook | Separate JEE Main 2027 and JEE Advanced 2027 strategies (`/strategy`); official rules and recommendations labelled separately | Published |
 | Interactive simulations (Concept Studio) | 14 | Published · *awaiting expert review* |
 | Named reactions · inorganic exceptions · concept flashcards | 18 · 16 · 24 | Published · *awaiting expert review* |
 | Periodic table data (118 elements) + configuration exceptions | Reference data | — |
@@ -35,9 +35,10 @@ To load the last five years: download the official question papers and final ans
 
 ## 2. Syllabus and exam pattern
 
-- **Chapter list.** It follows the latest official NTA syllabus PDF (JEE Main 2026, released 31 Oct 2025). Topics removed in 2024 are not taught as examinable: communication systems, states of matter, surface chemistry, s-block, hydrogen, metallurgy, polymers, environmental chemistry, and mathematical reasoning and induction. Admins can mark any chapter as *optional enrichment*.
+- **JEE Main 2027.** Every chapter, topic and subtopic was compared with the official *Syllabus for JEE (Main) - 2027* PDF (linked as "Syllabus" on jeemain.nta.nic.in, uploaded 24 Oct 2026; verified 18 Nov 2026). Subtopics follow the 2027 wording. Material the platform still teaches but the 2027 text does not list (for example planes in 3D, scalar triple product, tangents and normals, mean value theorems, trigonometric equations, radioactivity, potentiometer, Carnot engine, Doppler effect, Faraday's laws of electrolysis, oxoacid structures) is stored in `beyondMain` and labelled *Beyond JEE Main 2027* on topic pages and in formula sheets. Source and date: `SYLLABUS_SOURCE` in `content/syllabus.ts`.
+- **JEE Advanced 2027.** Organised by IIT Delhi. Its syllabus page said "Coming soon" on 18 Nov 2026, so no Advanced mapping is claimed yet (`ADVANCED_SYLLABUS.status = "pending"`). The Main and Advanced syllabi are not assumed to be the same.
 - **Default exam pattern.** The pattern NTA has used since 2025: 75 questions (20 MCQ + 5 numerical per subject, all compulsory), 180 minutes, +4 / −1 for MCQ and +4 / −1 for numerical.
-- **When the 2027 bulletin is published.** Secondary sources report that NTA issued a 2027 notification in late October 2026, but I could not confirm it on the official site. **Check jeemain.nta.nic.in.** The pattern, marking scheme, exam dates and syllabus version are all editable in *Admin → Exam configuration*, and no code change is needed.
+- **Exam pattern source.** The pattern above is from the 2025 and 2026 information bulletins; confirm it in the JEE Main 2027 Information Bulletin. Pattern, marking scheme, exam dates and syllabus version are editable in *Admin → Exam configuration* without code changes.
 
 ## 3. Tech stack
 
@@ -103,7 +104,9 @@ You can also register a new student account from the sign-in page.
 | `npm run db:seed` | Loads or refreshes the content library. Idempotent: it never rebuilds a mock that students have attempted |
 | `npm run student:reset -- <email>` | Clears one student's activity (attempts, plan, mistakes, …) and keeps the account |
 | `npm run typecheck` | Runs the TypeScript check |
-| `npm run check:content` | KaTeX compiles in every note and question, MCQs have exactly one key, 184-item formula checklist |
+| `npm run check:content` | KaTeX compiles in every note and question; MCQs have exactly one key and an explanation for every option; topic slugs exist; no duplicate questions; every numerical answer recomputed independently; 184-item formula checklist; periodic-table data consistency |
+| `npm run test:answers` | Recomputes all numerical Gym answers by an independent method (simulation, enumeration, numerical integration) |
+| `npx tsx scripts/list-coverage.ts` | Which chapters and topics have Gym questions, by level (`--all` lists every chapter) |
 | `npm run test:unit` | Marking scheme, SRS intervals, mistake ladder, plan budgets/phases, Gym unlocks, mastery, rate limiter |
 | `npm run test:e2e` | Against a running server: auth, rate limit, CSRF/Origin, IDOR between two students, admin-only APIs, full 75-question mock scoring, mid-mock solution lock, re-seed safety, mistakes, flashcards, plan + recovery, analytics, page renders. Creates and deletes throwaway users |
 | `npm run test:crawl` | Against a running server: follows every internal link as student and admin and reports any 4xx/5xx |
@@ -188,6 +191,8 @@ Vercel also works for the Next.js app with an external PostgreSQL. Use a pooled 
 
 - The expert verification pass on all starter content is still to do (see §1).
 - The PYQ library needs licensed papers imported.
-- The question bank holds 60 practice questions, so the Exam Simulator offers a 30-question *Starter Mock*. Full 75-question mocks can be assembled in the CMS once the bank has enough questions per subject; the assembler tells you exactly what is short.
-- 6 of 114 topics have full notes and 15 formulas exist. Every other topic shows *content pending*.
+- 59 of 114 topics still have no Gym questions (every chapter has at least one five-level set). `npx tsx scripts/list-coverage.ts` lists them.
+- JEE Advanced question formats (multiple-correct with partial marking, matrix match) are not yet question types; Level 5 uses single-correct and numerical formats with Advanced-style reasoning.
+- The JEE Advanced 2027 syllabus mapping waits for the official publication.
+- The GitHub Pages edition stores progress in the browser only; the Progress page offers export and import.
 - Animations pause when the browser tab is in the background (standard `requestAnimationFrame` behaviour).

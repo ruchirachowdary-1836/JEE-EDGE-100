@@ -15,7 +15,7 @@ const NAV = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/plan", label: "60-Day Plan", icon: CalendarRange },
     { href: "/analytics", label: "Analytics", icon: BarChart3 },
-    { href: "/strategy", label: "AIR 100 Playbook", icon: Trophy },
+    { href: "/strategy", label: "Exam Playbook", icon: Trophy },
   ]},
   { group: "Learn", items: [
     { href: "/syllabus", label: "Syllabus & Notes", icon: BookOpen },

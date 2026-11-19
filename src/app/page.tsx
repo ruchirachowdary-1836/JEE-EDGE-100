@@ -33,7 +33,7 @@ export default async function Home() {
 
       <section className="mx-auto max-w-6xl px-4 pb-12 pt-10 sm:pt-16">
         <div className="max-w-3xl">
-          <div className="chip mb-4 bg-electric-500/10 text-electric-600 dark:text-electric-300">JEE Main 2027 · Physics · Chemistry · Mathematics</div>
+          <div className="chip mb-4 bg-electric-500/10 text-electric-600 dark:text-electric-300">JEE Main 2027 · JEE Advanced 2027 · Physics · Chemistry · Mathematics</div>
           <h1 className="font-display text-4xl font-bold leading-tight tracking-tight sm:text-6xl">
             Understand every concept.<br />
             <span className="bg-gradient-to-r from-electric-400 to-violet-400 bg-clip-text text-transparent">Justify every formula.</span>

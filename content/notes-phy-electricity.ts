@@ -232,7 +232,7 @@ Cell of emf $\varepsilon$ and internal resistance $r$: terminal voltage $V = \va
 - Parallel cells: $\varepsilon_{eq} = \dfrac{\varepsilon_1r_2 + \varepsilon_2r_1}{r_1 + r_2}$, $r_{eq} = \dfrac{r_1r_2}{r_1 + r_2}$.
 - Maximum power to load: $P_{\max} = \dfrac{\varepsilon^2}{4r}$ at $R = r$.
 - Wheatstone: $\dfrac PQ = \dfrac RS$. Meter bridge: $\dfrac RS = \dfrac{l}{100 - l}$.
-- Potentiometer: $\dfrac{\varepsilon_1}{\varepsilon_2} = \dfrac{l_1}{l_2}$; internal resistance $r = R\left(\dfrac{l_1}{l_2} - 1\right)$.
+- Potentiometer: $\dfrac{\varepsilon_1}{\varepsilon_2} = \dfrac{l_1}{l_2}$; internal resistance $r = R\left(\dfrac{l_1}{l_2} - 1\right)$. *(Beyond JEE Main 2027.)*
 - Ammeter: shunt $S = \dfrac{I_gG}{I - I_g}$. Voltmeter: series $R = \dfrac V{I_g} - G$.`,
     diagrams: r`Wheatstone bridge: four arms $P, Q, R, S$ in a diamond, galvanometer across the middle, battery across the other diagonal.`,
     graphs: r`Terminal voltage vs current for a cell: straight line, intercept $\varepsilon$, slope $-r$.`,

@@ -361,13 +361,13 @@ Decay law $N = N_0e^{-\lambda t}$, half-life $\frac{\ln2}{\lambda}$.`,
     derivations: r`**Mean life.** $\tau = \frac{\int t\,dN}{N_0} = \frac1\lambda$, so $\tau = \frac{t_{1/2}}{0.693} = 1.44\,t_{1/2}$.`,
     formulas: r`- $R = R_0A^{1/3}$; nuclear density ≈ $2.3\times10^{17}\,\text{kg/m}^3$ (independent of $A$).
 - $\Delta m = Zm_p + (A - Z)m_n - M_{\text{nucleus}}$; $BE = \Delta m\times931.5$ MeV/u.
-- $N = N_0e^{-\lambda t} = N_0\left(\tfrac12\right)^{t/t_{1/2}}$; $t_{1/2} = \dfrac{0.693}\lambda$; $\tau = \dfrac1\lambda$.
-- Activity $A = \lambda N = A_0e^{-\lambda t}$.
+- $N = N_0e^{-\lambda t} = N_0\left(\tfrac12\right)^{t/t_{1/2}}$; $t_{1/2} = \dfrac{0.693}\lambda$; $\tau = \dfrac1\lambda$. *(Beyond JEE Main 2027.)*
+- Activity $A = \lambda N = A_0e^{-\lambda t}$. *(Beyond JEE Main 2027.)*
 - Q-value $= (\text{mass of reactants} - \text{mass of products})c^2$; positive ⇒ exothermic.
-- Alpha decay: $^A_ZX \to {}^{A-4}_{Z-2}Y + \alpha$; KE of alpha $= \dfrac{A - 4}{A}Q$.
-- Beta-minus: $n \to p + e^- + \bar\nu$ ($Z$ up by 1); beta-plus: $p \to n + e^+ + \nu$; gamma: no change in $A$, $Z$.
-- Number of α and β decays: $n_\alpha = \dfrac{\Delta A}4$, $n_\beta = 2n_\alpha - \Delta Z$.
-- Parallel decay: $\lambda = \lambda_1 + \lambda_2$. Successive decay at secular equilibrium: $\lambda_1N_1 = \lambda_2N_2$.`,
+- Alpha decay: $^A_ZX \to {}^{A-4}_{Z-2}Y + \alpha$; KE of alpha $= \dfrac{A - 4}{A}Q$. *(Beyond JEE Main 2027.)*
+- Beta-minus: $n \to p + e^- + \bar\nu$ ($Z$ up by 1); beta-plus: $p \to n + e^+ + \nu$; gamma: no change in $A$, $Z$. *(Beyond JEE Main 2027.)*
+- Number of α and β decays: $n_\alpha = \dfrac{\Delta A}4$, $n_\beta = 2n_\alpha - \Delta Z$. *(Beyond JEE Main 2027.)*
+- Parallel decay: $\lambda = \lambda_1 + \lambda_2$. Successive decay at secular equilibrium: $\lambda_1N_1 = \lambda_2N_2$. *(Beyond JEE Main 2027.)*`,
     diagrams: r`BE/A vs A curve: sharp rise for light nuclei, broad peak at Fe (~8.8 MeV), slow fall for heavy nuclei.`,
     graphs: r`$N$ vs $t$: exponential decay; $\ln N$ vs $t$: straight line of slope $-\lambda$.`,
     specialCases: r`- After $n$ half-lives, fraction left $= 2^{-n}$.
@@ -382,7 +382,7 @@ Decay law $N = N_0e^{-\lambda t}$, half-life $\frac{\ln2}{\lambda}$.`,
     misconceptions: r`- "Half-life means half the time to decay completely." Decay never completes in finite time.`,
     traps: r`- Atomic vs nuclear masses; MeV conversions.`,
     summary: r`- $R = R_0A^{1/3}$; $BE = \Delta m\cdot931.5$ MeV.
-- $N = N_0e^{-\lambda t}$, $t_{1/2} = 0.693/\lambda$, $\tau = 1/\lambda$.
+- $N = N_0e^{-\lambda t}$, $t_{1/2} = 0.693/\lambda$, $\tau = 1/\lambda$. *(Beyond JEE Main 2027.)*
 - $n_\alpha = \Delta A/4$, $n_\beta = 2n_\alpha - \Delta Z$.`,
   }),
 

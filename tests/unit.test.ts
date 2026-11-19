@@ -56,9 +56,21 @@ test("SRS: Again resets repetitions, adds a lapse and returns in 10 minutes", ()
   assert.equal(a.dueAt.getTime() - now.getTime(), 10 * 60_000);
 });
 
+test("SRS: Easy on a new card skips ahead (4 days); Again on a new card is not a lapse", () => {
+  const e = schedule(fresh, 3, rules, now);
+  assert.equal(e.intervalDays, 4);
+  assert.ok(e.intervalDays > schedule(fresh, 2, rules, now).intervalDays);
+  const a = schedule(fresh, 0, rules, now);
+  assert.equal(a.lapses, 0); assert.equal(a.ease, 2.5);
+  // grade order is monotone for a mature card
+  const mature = { ease: 2.5, intervalDays: 10, repetitions: 4, lapses: 0 };
+  const iv = ([1, 2, 3] as const).map((g) => schedule(mature, g, rules, now).intervalDays);
+  assert.ok(iv[0] < iv[1] && iv[1] < iv[2], iv.join(","));
+});
+
 test("SRS: ease never drops below 1.3 and interval never exceeds the cap", () => {
-  let c = { ease: 1.35, intervalDays: 1, repetitions: 0, lapses: 0 };
-  for (let i = 0; i < 5; i++) c = schedule(c, 0, rules, now);
+  let c = { ease: 1.6, intervalDays: 5, repetitions: 3, lapses: 0 };
+  for (let i = 0; i < 5; i++) c = schedule(c, 1, rules, now);
   assert.equal(c.ease, 1.3);
   let g = { ...fresh };
   for (let i = 0; i < 30; i++) g = schedule(g, 3, rules, now);

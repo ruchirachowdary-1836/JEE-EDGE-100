@@ -139,9 +139,9 @@ The conjugate $\bar z = x - iy$ is the reflection of $z$ in the real axis.`,
 - $\arg(z_1z_2) = \arg z_1 + \arg z_2$, $\arg(z_1/z_2) = \arg z_1 - \arg z_2$ — equality up to $2k\pi$.
 - Triangle inequality: $\big||z_1| - |z_2|\big| \le |z_1 + z_2| \le |z_1| + |z_2|$.
 - $|z_1 + z_2|^2 = |z_1|^2 + |z_2|^2 + 2\operatorname{Re}(z_1\bar z_2)$.
-- De Moivre: $(\cos\theta + i\sin\theta)^n = \cos n\theta + i\sin n\theta$ — integer $n$.
-- $n$th roots of unity: $e^{2k\pi i/n}$, $k = 0, 1, \dots, n-1$; their sum is $0$ ($n \ge 2$).
-- $1 + \omega + \omega^2 = 0$, $\omega^3 = 1$, $\bar\omega = \omega^2$.
+- De Moivre: $(\cos\theta + i\sin\theta)^n = \cos n\theta + i\sin n\theta$ — integer $n$. *(Beyond JEE Main 2027.)*
+- $n$th roots of unity: $e^{2k\pi i/n}$, $k = 0, 1, \dots, n-1$; their sum is $0$ ($n \ge 2$). *(Beyond JEE Main 2027.)*
+- $1 + \omega + \omega^2 = 0$, $\omega^3 = 1$, $\bar\omega = \omega^2$. *(Beyond JEE Main 2027.)*
 - $i^{4k} = 1$, $i^{4k+1} = i$, $i^{4k+2} = -1$, $i^{4k+3} = -i$.
 - Circle: $|z - z_0| = r$. Perpendicular bisector: $|z - z_1| = |z - z_2|$.
 - Rotation: $\dfrac{z_3 - z_1}{z_2 - z_1} = \dfrac{|z_3 - z_1|}{|z_2 - z_1|}e^{i\theta}$, where $\theta$ is the angle from $z_1z_2$ to $z_1z_3$.
@@ -164,7 +164,7 @@ The conjugate $\bar z = x - iy$ is the reflection of $z$ in the real axis.`,
     traps: r`- Using $(-\pi, \pi]$ vs $[0, 2\pi)$ inconsistently.
 - Squaring both sides of $|z - a| = |z - b|$ correctly gives a line, not a circle.`,
     summary: r`- $z = re^{i\theta}$; $|z_1z_2| = |z_1||z_2|$; arguments add.
-- $1 + \omega + \omega^2 = 0$, $\omega^3 = 1$; $n$th roots sum to $0$.
+- $1 + \omega + \omega^2 = 0$, $\omega^3 = 1$; $n$th roots sum to $0$. *(Beyond JEE Main 2027.)*
 - Rotation by $\theta$: multiply by $e^{i\theta}$.`,
   }),
 
@@ -282,12 +282,12 @@ $\operatorname{adj} A$ is the transpose of the cofactor matrix, and $A(\operator
 - $ {}^nC_x = {}^nC_y \Rightarrow x = y$ or $x + y = n$.
 - Arrangements with repetition allowed: $n^r$.
 - $n$ objects with $p, q, r$ alike: $\dfrac{n!}{p!\,q!\,r!}$.
-- Circular arrangements of $n$ distinct objects: $(n-1)!$; if clockwise = anticlockwise (necklace, garland): $\dfrac{(n-1)!}{2}$ ($n \ge 3$).
+- Circular arrangements of $n$ distinct objects: $(n-1)!$; if clockwise = anticlockwise (necklace, garland): $\dfrac{(n-1)!}{2}$ ($n \ge 3$). *(Beyond JEE Main 2027.)*
 - Selections of at least one from $n$ distinct objects: $2^n - 1$.
 - Selections from $p$ alike, $q$ alike, $r$ alike (at least one item): $(p+1)(q+1)(r+1) - 1$.
 - Non-negative integer solutions of $x_1 + \dots + x_r = n$: $\binom{n+r-1}{r-1}$; positive solutions: $\binom{n-1}{r-1}$.
-- Dividing $m + n$ distinct objects into groups of $m$ and $n$ ($m \ne n$): $\dfrac{(m+n)!}{m!\,n!}$; into two equal groups of $n$: $\dfrac{(2n)!}{2!\,(n!)^2}$.
-- Derangements: $D_n = n!\left(1 - \dfrac1{1!} + \dfrac1{2!} - \dots + \dfrac{(-1)^n}{n!}\right)$; $D_2 = 1$, $D_3 = 2$, $D_4 = 9$.
+- Dividing $m + n$ distinct objects into groups of $m$ and $n$ ($m \ne n$): $\dfrac{(m+n)!}{m!\,n!}$; into two equal groups of $n$: $\dfrac{(2n)!}{2!\,(n!)^2}$. *(Beyond JEE Main 2027.)*
+- Derangements: $D_n = n!\left(1 - \dfrac1{1!} + \dfrac1{2!} - \dots + \dfrac{(-1)^n}{n!}\right)$; $D_2 = 1$, $D_3 = 2$, $D_4 = 9$. *(Beyond JEE Main 2027.)*
 - Number of divisors of $N = p_1^{a_1}p_2^{a_2}\cdots$: $(a_1+1)(a_2+1)\cdots$.
 - Points in a plane, no three collinear: lines $ {}^nC_2$, triangles $ {}^nC_3$; diagonals of an $n$-gon: $ {}^nC_2 - n$.`,
     diagrams: r`Gap method: place the unrestricted objects first (e.g. $5$ boys create $6$ gaps), then choose gaps for the objects that must be separated.`,

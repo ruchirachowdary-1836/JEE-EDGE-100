@@ -5,10 +5,9 @@ import { db } from "@/lib/db";
 import { topicStats, emptyStat } from "@/lib/progress";
 import { getSettings } from "@/lib/config";
 import { PageHeader, SubjectChip, StageBadge, Card } from "@/components/ui";
+import { GYM_LEVELS } from "@/lib/levels";
 
 export const metadata = { title: "Question Gym" };
-
-const LEVELS = ["Fundamental understanding", "Basic application", "Multi-step application", "JEE Main level", "Challenging problem-solving"];
 
 export default async function GymPage() {
   const user = await requireUser();
@@ -25,10 +24,11 @@ export default async function GymPage() {
         subtitle={<>Five levels per topic. Level 1 is open; each next level unlocks after you attempt at least {settings.gym.minCompletion}% of the current level&apos;s questions with {settings.gym.minAccuracy}% accuracy or better (all attempts count, including retries).</>} />
       <Card className="mb-6">
         <div className="grid gap-3 sm:grid-cols-5">
-          {LEVELS.map((l, i) => (
-            <div key={l} className="rounded-xl bg-[var(--surface-2)] p-3">
-              <div className="text-xs font-bold text-violet-500">Level {i + 1}</div>
-              <div className="text-sm font-semibold">{l}</div>
+          {GYM_LEVELS.map((l) => (
+            <div key={l.level} className="rounded-xl bg-[var(--surface-2)] p-3">
+              <div className="text-xs font-bold text-violet-500">Level {l.level}</div>
+              <div className="text-sm font-semibold">{l.name}</div>
+              <div className="muted mt-1 text-xs">{l.description}</div>
             </div>
           ))}
         </div>

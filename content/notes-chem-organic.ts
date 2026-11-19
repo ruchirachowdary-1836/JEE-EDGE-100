@@ -85,12 +85,12 @@ Stereoisomerism: geometrical (cis/trans, E/Z by CIP priority) and optical (chira
 3. Radical stability parallels carbocations.
 4. Carbocations rearrange (hydride/alkyl shifts) to more stable ones.`,
     derivations: r`**Acidity of substituted acids.** Electron-withdrawing groups stabilise the carboxylate anion: Cl₃CCOOH > Cl₂CHCOOH > ClCH₂COOH > CH₃COOH; and FCH₂COOH > ClCH₂COOH (F more −I).`,
-    formulas: r`- Carbocation: $(C_6H_5)_3C^+ > (C_6H_5)_2CH^+ > C_6H_5CH_2^+ \approx CH_2=CHCH_2^+ > 3^\circ > 2^\circ > 1^\circ > CH_3^+$.
+    formulas: r`- Carbocation: $(C_6H_5)_3C^+ > (C_6H_5)_2CH^+$; $3^\circ > 2^\circ > 1^\circ > CH_3^+$. Benzyl and allyl cations are resonance-stabilised (far more stable than an ordinary primary cation, comparable to secondary/tertiary ones); their exact position relative to a tertiary cation depends on the medium, so do not rank them against 3° unless the question's context decides it.
 - Acidity: carboxylic acids > phenol > water > alcohols > alkynes; o-, p-nitrophenol > phenol > p-cresol.
 - Basicity (aqueous): $(C_2H_5)_2NH > (C_2H_5)_3N > C_2H_5NH_2 > NH_3$; for methyl: $2^\circ > 1^\circ > 3^\circ > NH_3$; aniline much weaker (lone pair delocalised).
 - Hyperconjugation structures = number of α-H atoms.
 - Stability of alkenes: more substituted (more α-H) more stable; trans > cis.
-- Ortho effect: ortho-substituted benzoic acids are more acidic than benzoic acid (regardless of the substituent).`,
+- Ortho effect: most ortho-substituted benzoic acids — with electron-donating or electron-withdrawing groups — are stronger acids than benzoic acid (steric inhibition of resonance, and H-bonding in salicylic acid). Exception to remember: o-aminobenzoic acid is weaker.`,
     diagrams: r`Resonance structures of the phenoxide ion and benzyl cation showing charge delocalised over the ring.`,
     graphs: r`Not applicable.`,
     specialCases: r`- Halogens: −I > +R, so they deactivate the ring but direct ortho/para.
@@ -233,7 +233,7 @@ Elimination (E2) with strong bulky base and heat gives the more substituted alke
 - Reactions of phenol: Br₂ water → 2,4,6-tribromophenol (white ppt); dil. HNO₃ → o/p-nitrophenol; Kolbe (CO₂/NaOH) → salicylic acid; Reimer–Tiemann (CHCl₃/NaOH) → salicylaldehyde; Zn dust → benzene; FeCl₃ → violet colour.
 - Acidity: p-nitrophenol > m-nitrophenol > phenol > p-cresol; 2,4,6-trinitrophenol (picric acid) strongly acidic.
 - Williamson: RONa + R′X (1°) → ROR′.
-- Ether + HI: R–O–CH₃ → ROH + CH₃I.
+- Ether + HI: with a 1° or 2° alkyl group (SN2 at the less hindered carbon), R–O–CH₃ → ROH + CH₃I; with a 3° alkyl group (SN1), (CH₃)₃C–O–CH₃ → (CH₃)₃C–I + CH₃OH; aryl methyl ethers give phenol + CH₃I (the aryl–O bond does not break).
 - Tests: Lucas (1°/2°/3°), iodoform for CH₃CH(OH)– group, ceric ammonium nitrate (red) for alcohols.`,
     diagrams: r`Phenoxide resonance: negative charge delocalised onto ortho and para carbons.`,
     graphs: r`Boiling point: alcohols ≫ ethers of similar mass (H-bonding).`,

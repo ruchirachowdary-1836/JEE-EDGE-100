@@ -7,13 +7,13 @@ import { ProgressBar } from "@/components/ui";
 import { cn, fmtDuration } from "@/lib/utils";
 import type { SiteQuestion } from "@site/lib/data";
 
-// Browser-only progress: { [questionId]: boolean[] } (every attempt, in order)
+import { load, recordAttempt, setUnlocked as saveUnlocked } from "@site/lib/progress";
+import { GYM_LEVELS } from "@/lib/levels";
+
+// Progress lives in the shared browser store (@site/lib/progress): every attempt with its time.
 type Store = Record<string, boolean[]>;
-const KEY = "jee-edge-static-attempts";
-const read = (): Store => { try { return JSON.parse(localStorage.getItem(KEY) ?? "{}"); } catch { return {}; } };
-const write = (s: Store) => { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch { /* storage unavailable */ } };
-const UNLOCK = "jee-edge-static-unlocked";
-const readUnlocked = (): Record<string, number> => { try { return JSON.parse(localStorage.getItem(UNLOCK) ?? "{}"); } catch { return {}; } };
+const read = (): Store => Object.fromEntries(Object.entries(load().attempts).map(([k, v]) => [k, v.map((a) => a.ok)]));
+const readUnlocked = (): Record<string, number> => load().unlocked;
 
 function levelStats(ids: string[], store: Store) {
   const all = ids.flatMap((id) => store[id] ?? []);
@@ -45,7 +45,7 @@ export function GymProgressBadge({ topic, ids }: { topic: string; ids: string[] 
   return txt ? <span className="chip bg-violet-500/10 text-violet-500">{txt}</span> : null;
 }
 
-function QuestionCard({ q, index, onAnswer }: { q: SiteQuestion; index: number; onAnswer: (ok: boolean) => void }) {
+function QuestionCard({ q, index, onAnswer }: { q: SiteQuestion; index: number; onAnswer: (ok: boolean, sec: number) => void }) {
   const [sel, setSel] = useState<number | null>(null);
   const [num, setNum] = useState("");
   const [result, setResult] = useState<boolean | null>(null);
@@ -68,7 +68,7 @@ function QuestionCard({ q, index, onAnswer }: { q: SiteQuestion; index: number; 
       ok = Math.abs(Number(num) - (q.answer ?? NaN)) <= (q.tolerance ?? 0.01);
     }
     setResult(ok);
-    onAnswer(ok);
+    onAnswer(ok, Math.round((Date.now() - start.current) / 1000));
   };
   const retry = () => { setResult(null); setSel(null); setNum(""); start.current = Date.now(); setElapsed(0); };
   const correctIdx = q.options?.findIndex((o) => o.correct) ?? -1;
@@ -76,7 +76,7 @@ function QuestionCard({ q, index, onAnswer }: { q: SiteQuestion; index: number; 
     <div className="card card-pad">
       <div className="mb-3 flex flex-wrap items-center gap-2 text-xs">
         <span className="font-bold">Q{index + 1}</span>
-        <span className="chip bg-violet-500/10 text-violet-500">Level {q.level}</span>
+        <span className="chip bg-violet-500/10 text-violet-500" title={GYM_LEVELS[q.level - 1]?.description}>Level {q.level} · {GYM_LEVELS[q.level - 1]?.name}</span>
         <span className={cn("chip", q.difficulty === "EASY" ? "bg-emerald-500/10 text-emerald-600" : q.difficulty === "MEDIUM" ? "bg-amber-500/10 text-amber-600" : "bg-rose-500/10 text-rose-600")}>{q.difficulty.toLowerCase()}</span>
         <span className="chip bg-[var(--surface-2)]">{q.type === "MCQ" ? "Single correct" : "Numerical value"}</span>
         <span className="muted ml-auto flex items-center gap-1"><Clock size={13} /> {fmtDuration(elapsed)} / ~{fmtDuration(q.time)}</span>
@@ -126,13 +126,12 @@ export function StaticGym({ topic, questions }: { topic: string; questions: Site
   const [newUnlock, setNewUnlock] = useState<number | null>(null);
   useEffect(() => { const s = read(); setStore(s); setUnlocked(computeUnlocked(topic, questions, s)); }, [topic, questions]);
 
-  const answer = (id: string, ok: boolean) => {
-    const s = { ...read() };
-    s[id] = [...(s[id] ?? []), ok];
-    write(s);
+  const answer = (id: string, ok: boolean, sec: number) => {
+    recordAttempt(id, ok, sec);
+    const s = read();
     setStore(s);
     const u = computeUnlocked(topic, questions, s);
-    if (u > unlocked) { setNewUnlock(u); try { localStorage.setItem(UNLOCK, JSON.stringify({ ...readUnlocked(), [topic]: u })); } catch { /* ignore */ } }
+    if (u > unlocked) { setNewUnlock(u); saveUnlocked(topic, u); }
     setUnlocked(u);
   };
 
@@ -146,7 +145,7 @@ export function StaticGym({ topic, questions }: { topic: string; questions: Site
           const s = levelStats(ids(l), store);
           return (
             <button key={l} disabled={!open} onClick={() => setLevel(l)} className={cn("rounded-xl border p-3 text-left transition", level === l ? "border-electric-500 bg-electric-500/10" : "border-[var(--border)]", !open && "cursor-not-allowed opacity-50")}>
-              <div className="flex items-center justify-between text-xs font-bold"><span>Level {l}</span>{!open ? <Lock size={13} /> : s.cleared ? <CheckCircle2 size={14} className="text-emerald-500" /> : null}</div>
+              <div className="flex items-center justify-between text-xs font-bold"><span>Level {l}<span className="muted hidden font-normal lg:inline"> · {GYM_LEVELS[l - 1].name}</span></span>{!open ? <Lock size={13} /> : s.cleared ? <CheckCircle2 size={14} className="text-emerald-500" /> : null}</div>
               <div className="muted mt-1 hidden text-[11px] sm:block">{s.attempted}/{ids(l).length} tried · {s.accuracy}%</div>
             </button>
           );
@@ -163,7 +162,7 @@ export function StaticGym({ topic, questions }: { topic: string; questions: Site
         <ProgressBar value={stats.accuracy} label="Accuracy (all attempts)" color={stats.accuracy >= 70 ? "bg-emerald-500" : "bg-amber-500"} />
       </div>
       <div className="space-y-4">
-        {questions.filter((q) => q.level === level).map((q, i) => <QuestionCard key={q.id} q={q} index={i} onAnswer={(ok) => answer(q.id, ok)} />)}
+        {questions.filter((q) => q.level === level).map((q, i) => <QuestionCard key={q.id} q={q} index={i} onAnswer={(ok, sec) => answer(q.id, ok, sec)} />)}
       </div>
     </div>
   );

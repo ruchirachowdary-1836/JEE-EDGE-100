@@ -1,4 +1,5 @@
 import { db } from "./db";
+import { DEFAULT_SRS_RULES } from "./srs";
 
 export type ExamPattern = {
   name: string;
@@ -52,11 +53,11 @@ export const DEFAULT_SETTINGS: AppSettings = {
     { label: "JEE Main 2027 — Session 2 (tentative)", date: "2027-04-01" },
   ],
   syllabus: {
-    version: "NTA JEE Main 2026 syllabus (released 31 Oct 2025)",
-    note: "Chapter list follows the latest official NTA syllabus available when this content was prepared. Re-check against the JEE Main 2027 syllabus PDF and mark any removed chapter as enrichment.",
+    version: "official NTA JEE Main 2027 syllabus (PDF uploaded 24 Oct 2026, verified 18 Nov 2026)",
+    note: "Each topic lists what the 2027 syllabus covers; material taught here beyond it is labelled “Beyond JEE Main 2027”. The JEE Advanced 2027 syllabus has not been published yet.",
   },
   gym: { minAccuracy: 70, minCompletion: 100 },
-  srs: { firstIntervalDays: 1, secondIntervalDays: 3, maxIntervalDays: 45, mistakeReviewDays: [1, 3, 7, 15] },
+  srs: DEFAULT_SRS_RULES,
   mastery: { minAttempts: 8, minAccuracy: 80, minLevelCleared: 4, minRevisions: 1 },
 };
 

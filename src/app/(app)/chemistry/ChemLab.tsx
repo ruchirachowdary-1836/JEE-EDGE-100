@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Search, Shuffle, Eye, ArrowRight } from "lucide-react";
-import { ELEMENTS, gridPos, configuration, aufbau, unpairedInSubshell, CONFIG_EXCEPTIONS, type Element } from "@/lib/elements";
+import { ELEMENTS, gridPos, configuration, aufbau, unpairedInSubshell, CONFIG_EXCEPTIONS, hasStandardWeight, massLabel, isGroup12, type Element } from "@/lib/elements";
 import { ORGANIC_NODES, ORGANIC_EDGES, type OrganicEdge } from "@content/chemistry";
 import { TeX, Rich, Inline } from "@/components/Rich";
 import { Player } from "@/components/studio/Player";
@@ -60,15 +60,15 @@ function PeriodicTable({ onPick }: { onPick: (z: number) => void }) {
       {mode === "en" && <p className="muted text-xs">Blue = low electronegativity → red = high (Pauling). Grey = no accepted value. Notice the rise across a period and fall down a group.</p>}
       <div className="card card-pad grid gap-4 md:grid-cols-[auto_1fr]">
         <div className="grid h-28 w-28 place-items-center rounded-2xl text-center" style={{ background: color(sel), color: "#0b1020" }}>
-          <div><div className="text-xs font-semibold">{sel.z}</div><div className="font-display text-4xl font-bold">{sel.symbol}</div><div className="text-[10px]">{sel.mass}</div></div>
+          <div><div className="text-xs font-semibold">{sel.z}</div><div className="font-display text-4xl font-bold">{sel.symbol}</div><div className="text-[10px]">{massLabel(sel)}</div></div>
         </div>
         <div className="grid gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
           <div><span className="muted">Name:</span> <strong>{sel.name}</strong></div>
-          <div><span className="muted">Category:</span> {sel.category}</div>
+          <div><span className="muted">Category:</span> {isGroup12(sel.z) ? "group 12 (d-block, not a transition element)" : sel.category}</div>
           <div><span className="muted">Group / Period:</span> {sel.group ?? "3 (f-block)"} / {sel.period}</div>
           <div><span className="muted">Block:</span> {sel.block}</div>
           <div><span className="muted">Electronegativity:</span> {sel.en ?? "—"}</div>
-          <div><span className="muted">Atomic mass:</span> {sel.mass}</div>
+          <div><span className="muted">{hasStandardWeight(sel.z) ? "Standard atomic weight" : "Mass number (longest-lived isotope)"}:</span> {massLabel(sel)}</div>
           <div className="sm:col-span-2"><span className="muted">Configuration:</span> <span className="font-mono">{cfg.condensed}</span> {cfg.exception && <span className="chip ml-1 bg-amber-500/10 text-amber-600">exception</span>}</div>
           {cfg.exception && <div className="muted text-xs sm:col-span-2">{cfg.exception}</div>}
         </div>

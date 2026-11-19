@@ -4,6 +4,7 @@ import { BookOpen, Dumbbell, Sigma, Clapperboard } from "lucide-react";
 import { Card, PageHeader, SubjectChip } from "@/components/ui";
 import { TeX } from "@/components/Rich";
 import { ChapterFormulas } from "@/components/ChapterFormulas";
+import { BeyondMainLine } from "@/components/SyllabusScope";
 import { CHAPTERS, chapterBySlug, NOTES, FORMULAS, ANIMATIONS, QUESTIONS, COMPARISONS } from "@site/lib/data";
 
 export const generateStaticParams = () => CHAPTERS.map((c) => ({ slug: c.slug }));
@@ -36,6 +37,7 @@ export default function ChapterPage({ params }: { params: { slug: string } }) {
                       <Link href={`/topic/${t.slug}`} className="font-semibold hover:underline">{t.name}</Link>
                     </div>
                     <div className="muted mt-1 text-xs">{t.subtopics.join(" · ")}</div>
+                    <BeyondMainLine items={t.beyondMain} />
                   </div>
                   <div className="flex shrink-0 gap-2">
                     <Link href={`/topic/${t.slug}`} className="btn-ghost !py-1.5 text-xs"><BookOpen size={14} /> Notes</Link>

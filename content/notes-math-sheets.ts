@@ -21,7 +21,7 @@ export const MATH_SHEETS: Record<string, string> = {
 - Periodic $f$ (period $T$): $\int_0^{nT} f = n\int_0^T f$; $\int_a^{a+T} f = \int_0^T f$.
 - $\int_a^b \dfrac{f(x)}{f(x) + f(a+b-x)}dx = \dfrac{b - a}2$.
 - Leibniz: $\dfrac d{dx}\int_{g(x)}^{h(x)} f(t)\,dt = f(h(x))h'(x) - f(g(x))g'(x)$ — $f$ continuous.
-- Limit of a sum: $\lim_{n\to\infty}\dfrac1n\sum_{r=1}^{n} f\!\left(\dfrac rn\right) = \int_0^1 f(x)\,dx$.
+- Limit of a sum: $\lim_{n\to\infty}\dfrac1n\sum_{r=1}^{n} f\!\left(\dfrac rn\right) = \int_0^1 f(x)\,dx$. *(Beyond JEE Main 2027.)*
 - Wallis: $\int_0^{\pi/2}\sin^n x\,dx = \int_0^{\pi/2}\cos^n x\,dx = \dfrac{n-1}{n}\cdot\dfrac{n-3}{n-2}\cdots$, ending in $\dfrac12\cdot\dfrac\pi2$ ($n$ even) or $\dfrac23\cdot1$ ($n$ odd).
 - $\int_0^{\pi/2}\ln\sin x\,dx = \int_0^{\pi/2}\ln\cos x\,dx = -\dfrac\pi2\ln2$.
 - $\int_0^\pi x f(\sin x)\,dx = \dfrac\pi2\int_0^\pi f(\sin x)\,dx$.

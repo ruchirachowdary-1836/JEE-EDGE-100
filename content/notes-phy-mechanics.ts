@@ -339,7 +339,7 @@ Vertical circle (string): speed changes as gravity does work; tension varies aro
 - Impulse $\vec J = \int\vec F\,dt = \Delta\vec p$.
 - Recoil: $V = -\dfrac mMv$; recoil energy $\dfrac{p^2}{2M}$ (smaller for heavier gun).
 - $KE = \dfrac{p^2}{2m}$; same momentum ⇒ lighter body has more KE.
-- Rocket thrust $F = u\dfrac{dm}{dt}$; $v = v_0 + u\ln\dfrac{m_0}{m}$ (no gravity).
+- Rocket thrust $F = u\dfrac{dm}{dt}$; $v = v_0 + u\ln\dfrac{m_0}{m}$ (no gravity). *(Beyond JEE Main 2027.)*
 - Explosion of a body at rest into two pieces: momenta equal and opposite; $\dfrac{KE_1}{KE_2} = \dfrac{m_2}{m_1}$.
 - Man walking on a plank on frictionless ice: the centre of mass stays fixed.`,
     diagrams: r`Before/after sketches with momentum arrows; add arrows head-to-tail to check the vector sum in 2D explosions.`,

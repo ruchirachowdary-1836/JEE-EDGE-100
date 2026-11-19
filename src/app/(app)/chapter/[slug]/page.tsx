@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { topicStats, emptyStat } from "@/lib/progress";
 import { Card, PageHeader, StageBadge, SubjectChip } from "@/components/ui";
 import { ChapterFormulas } from "@/components/ChapterFormulas";
+import { BeyondMainLine } from "@/components/SyllabusScope";
 import { TeX } from "@/components/Rich";
 
 export default async function ChapterPage({ params }: { params: { slug: string } }) {
@@ -54,6 +55,7 @@ export default async function ChapterPage({ params }: { params: { slug: string }
                       <StageBadge stage={s.stage} />
                     </div>
                     {t.subtopics.length > 0 && <div className="muted mt-1 text-xs">{t.subtopics.join(" · ")}</div>}
+                    <BeyondMainLine items={t.beyondMain} />
                   </div>
                   <div className="flex shrink-0 gap-2">
                     <Link href={`/topic/${t.slug}`} className="btn-ghost !py-1.5 text-xs"><BookOpen size={14} /> Notes</Link>

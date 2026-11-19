@@ -1,3 +1,5 @@
+import { SyllabusSourceCard } from "@/components/SyllabusScope";
+import { SYLLABUS } from "@content/syllabus";
 import Link from "next/link";
 import { requireUser } from "@/lib/auth";
 import { syllabusWithStats } from "@/lib/queries";
@@ -13,6 +15,7 @@ export default async function SyllabusPage() {
   return (
     <div>
       <PageHeader eyebrow="Complete syllabus" title="Syllabus & Master Notes" subtitle={<>Chapter list based on the {settings.syllabus.version}. {settings.syllabus.note}</>} />
+      <SyllabusSourceCard beyondCount={SYLLABUS.flatMap((s) => s.chapters.flatMap((c) => c.topics.flatMap((t) => t.beyondMain ?? []))).length} />
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {subjects.map((s) => {
           const units = [...new Set(s.chapters.map((c) => c.unit ?? ""))];

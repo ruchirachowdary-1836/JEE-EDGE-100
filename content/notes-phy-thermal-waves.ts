@@ -64,11 +64,11 @@ Efficiency $\eta = \frac{W}{Q_1} = 1 - \frac{Q_2}{Q_1}$. For a Carnot engine (tw
 2. All reversible engines between the same temperatures have the same efficiency.`,
     derivations: r`**Carnot efficiency.** Isothermal heat: $Q_1 = nRT_1\ln\frac{V_2}{V_1}$, $Q_2 = nRT_2\ln\frac{V_3}{V_4}$. The adiabats give $\frac{V_2}{V_1} = \frac{V_3}{V_4}$, so $\frac{Q_2}{Q_1} = \frac{T_2}{T_1}$ and $\eta = 1 - \frac{T_2}{T_1}$.`,
     formulas: r`- Engine: $W = Q_1 - Q_2$, $\eta = \dfrac{W}{Q_1} = 1 - \dfrac{Q_2}{Q_1}$.
-- Carnot: $\eta = 1 - \dfrac{T_2}{T_1}$, $\dfrac{Q_2}{Q_1} = \dfrac{T_2}{T_1}$ — temperatures in kelvin.
-- Refrigerator: $\beta = \dfrac{Q_2}{W} = \dfrac{T_2}{T_1 - T_2}$ (Carnot).
-- Relation: $\beta = \dfrac{1 - \eta}{\eta}$ for a Carnot engine run in reverse.
-- Heat pump COP $= \dfrac{Q_1}{W} = \dfrac{T_1}{T_1 - T_2}$.
-- Entropy change (reversible): $\Delta S = \int\dfrac{dQ}{T}$; isothermal $\Delta S = \dfrac QT$.`,
+- Carnot: $\eta = 1 - \dfrac{T_2}{T_1}$, $\dfrac{Q_2}{Q_1} = \dfrac{T_2}{T_1}$ — temperatures in kelvin. *(Beyond JEE Main 2027.)*
+- Refrigerator: $\beta = \dfrac{Q_2}{W} = \dfrac{T_2}{T_1 - T_2}$ (Carnot). *(Beyond JEE Main 2027.)*
+- Relation: $\beta = \dfrac{1 - \eta}{\eta}$ for a Carnot engine run in reverse. *(Beyond JEE Main 2027.)*
+- Heat pump COP $= \dfrac{Q_1}{W} = \dfrac{T_1}{T_1 - T_2}$. *(Beyond JEE Main 2027.)*
+- Entropy change (reversible): $\Delta S = \int\dfrac{dQ}{T}$; isothermal $\Delta S = \dfrac QT$. *(Beyond JEE Main 2027.)*`,
     diagrams: r`Block diagram: hot reservoir → engine → cold reservoir, with work arrow out of the engine.`,
     graphs: r`Carnot cycle on $P$–$V$: two isotherms joined by two steeper adiabats; enclosed area = work per cycle.`,
     specialCases: r`- $\eta = 1$ would need $T_2 = 0\,\text{K}$, which is unattainable.
@@ -176,7 +176,7 @@ Speed on a string $v = \sqrt{T/\mu}$; sound in a gas $v = \sqrt{\gamma P/\rho}$ 
 - Max particle speed $A\omega$; max particle acceleration $A\omega^2$.
 - Intensity $I = 2\pi^2f^2A^2\rho v$; spherical source $I \propto \dfrac1{r^2}$.
 - Sound level $\beta = 10\log_{10}\dfrac{I}{I_0}$ dB, $I_0 = 10^{-12}\,\text{W m}^{-2}$.
-- Doppler: $f' = f\dfrac{v \pm v_o}{v \mp v_s}$ — upper signs when source and observer approach each other ($v_o$, $v_s$ along the line joining them).`,
+- Doppler: $f' = f\dfrac{v \pm v_o}{v \mp v_s}$ — upper signs when source and observer approach each other ($v_o$, $v_s$ along the line joining them). *(Beyond JEE Main 2027.)*`,
     diagrams: r`The live diagram shows a travelling wave and a single particle that only moves up and down.`,
     graphs: r`Snapshot ($y$ vs $x$ at fixed $t$) shows $\lambda$; history ($y$ vs $t$ at fixed $x$) shows $T$.`,
     specialCases: r`- Wave reflected from a fixed end inverts (phase change $\pi$); from a free end it does not.

@@ -1,3 +1,4 @@
+import { SyllabusSourceCard } from "@/components/SyllabusScope";
 import Link from "next/link";
 import { PageHeader, Card, SubjectChip } from "@/components/ui";
 import { SUBJECTS, NOTES } from "@site/lib/data";
@@ -7,7 +8,8 @@ export const metadata = { title: "Syllabus" };
 export default function SyllabusPage() {
   return (
     <div>
-      <PageHeader eyebrow="Complete syllabus" title="Syllabus & Master Notes" subtitle="Chapter list based on the NTA JEE Main 2026 syllabus (latest official PDF). Re-check against the 2027 bulletin when published. Topics marked with a dot have full notes." />
+      <PageHeader eyebrow="Complete syllabus" title="Syllabus & Master Notes" subtitle="All 54 chapters mapped to the official JEE Main 2027 syllabus. Topics marked with a dot have full notes." />
+      <SyllabusSourceCard beyondCount={SUBJECTS.flatMap((s) => s.chapters.flatMap((c) => c.topics.flatMap((t) => t.beyondMain))).length} />
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {SUBJECTS.map((s) => {
           const units = [...new Set(s.chapters.map((c) => c.unit ?? ""))];
